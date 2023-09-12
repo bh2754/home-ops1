@@ -40,10 +40,6 @@ spec:
         enabled: true
         ingressClassName: "internal"
         annotations:
-#         cert-manager.io/cluster-issuer: "letsencrypt-production"
-#         auth.home.arpa/enabled: "true"
-#         external-dns.home.arpa/enabled: "true"
-#         external-dns/is-public: "true"
           hajimari.io/enable: "true"
           hajimari.io/icon: "mdiBookOpenVariant"
         hosts:
@@ -54,26 +50,25 @@ spec:
         tls:
           - hosts:
               - *host
-#           secretName: "komga-tls"
     persistence:
       config:
         enabled: true
         existingClaim: komga-config-v1
-        mountPath: /config
+#       mountPath: /config
       data:
         enabled: true
         type: nfs
         server: ${NFS_SERVER}
         path: "${NFS_MEDIA}/comics"
         mountPath: /comics
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-    resources:
-      requests:
-        cpu: 15m
-        memory: 672M
-      limits:
-        cpu: 15m
-        memory: 869M
+#   podSecurityContext:
+#     runAsUser: 568
+#     runAsGroup: 568
+#     fsGroup: 568
+#   resources:
+#     requests:
+#       cpu: 15m
+#       memory: 672M
+#     limits:
+#       cpu: 15m
+#       memory: 869M
