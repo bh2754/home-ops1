@@ -1,74 +1,77 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: komga
-  namespace: media
+  name: &app komga
+  namespace: default
 spec:
-  interval: 5m
+  interval: 30m
   chart:
     spec:
-      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: app-template
       version: 1.5.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  maxHistory: 2
   install:
     createNamespace: true
     remediation:
-      retries: 5
+      retries: 3
   upgrade:
+    cleanupOnFail: true
     remediation:
-      retries: 5
+      retries: 3
+  uninstall:
+    keepHistory: false
   values:
     image:
       repository: gotson/komga
-      tag: 1.4.0
-      pullPolicy: IfNotPresent
+      tag: "1.3.1"
     env:
-      TZ: ${TZ}
+      TZ: "${TIMEZONE}"
+      SERVER_PORT: &port 8080
     service:
       main:
         ports:
           http:
-            port: 8080
-
+            port: *port
     ingress:
       main:
         enabled: true
-        ingressClassName: "internal"
         annotations:
-          hajimari.io/enable: "true"
-          hajimari.io/icon: "mdiBookOpenVariant"
+          hajimari.io/icon: mdi:ideogram-cjk-variant
+        ingressClassName: "nginx"
         hosts:
-          - host: &host "komga.${SECRET_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
+      supplementalGroups:
+        - 100
     persistence:
       config:
         enabled: true
         existingClaim: komga-config-v1
-#       mountPath: /config
-      data:
+      comics:
         enabled: true
         type: nfs
-        server: ${NFS_SERVER}
-        path: "${NFS_MEDIA}/comics"
-#       mountPath: /comics
-#   podSecurityContext:
-#     runAsUser: 568
-#     runAsGroup: 568
-#     fsGroup: 568
-#   resources:
-#     requests:
-#       cpu: 15m
-#       memory: 672M
-#     limits:
-#       cpu: 15m
-#       memory: 869M
+        server: "${NFS_SERVER}"
+        path: /Media/comics
+        mountPath: /Media/comics
+    resources:
+      requests:
+        memory: 4282M
+        cpu: 15m
+      limits:
+        memory: 4282M
