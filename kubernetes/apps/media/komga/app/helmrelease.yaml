@@ -67,5 +67,5 @@ spec:
         enabled: true
         type: nfs
         server: "10.0.109.29"
-        path: /Volume1/Media/comics
+        path: /volume1/Media/comics
 #       mountPath: /media
