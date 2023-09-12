@@ -18,9 +18,18 @@ env:
   K8S_AUTH_KUBECONFIG: "{{.ROOT_DIR}}/kubeconfig"
 
 includes:
-  ansible: .taskfiles/AnsibleTasks.yaml
   brew: .taskfiles/BrewTasks.yaml
   cluster: .taskfiles/ClusterTasks.yaml
+  an: .taskfiles/AnsibleTasks.yml
+  precommit: .taskfiles/PrecommitTasks.yml
+  tf: .taskfiles/TerraformTasks.yml
+  sops: .taskfiles/SopsTasks.yml
+  ss: .taskfiles/SnapshotTasks.yml
+  vs: .taskfiles/VolSync/Tasks.yaml
+  es: .taskfiles/ExternalSecrets/Tasks.yml
+  fx: .taskfiles/Flux/Tasks.yml
+  ku: .taskfiles/Kubernetes/Tasks.yml
+
 
 tasks:
 
