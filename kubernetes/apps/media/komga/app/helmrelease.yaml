@@ -50,7 +50,7 @@ spec:
           hajimari.io/icon: "television-box"
           hajimari.io/appName: komga
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "komga.${SECRET_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
