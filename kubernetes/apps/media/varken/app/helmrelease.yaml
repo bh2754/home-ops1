@@ -1,0 +1,75 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: varken
+  namespace: media
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 1.5.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s-charts
+        namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    image:
+      repository: ghcr.io/boerderij/varken
+      tag: nightly
+      pullPolicy: IfNotPresent
+    env:
+      TZ: ${TIMEZONE}
+    envFrom:
+      - secretRef:
+          name: varken-secret
+    service:
+      main:
+        enabled: false
+      # ports:
+        # http:
+          # port: 80
+  # ingress:
+    # main:
+      # enabled: false
+      # ingressClassName: "nginx"
+      # annotations:
+        # auth.home.arpa/enabled: "true"
+        # external-dns.home.arpa/enabled: "true"
+        # external-dns/is-public: "true"
+        # hajimari.io/enable: "true"
+        # hajimari.io/icon: "television-box"
+        # cert-manager.io/cluster-issuer: "letsencrypt-production"
+      # hosts:
+        # - host: &host "varken.${SECRET_DOMAIN}"
+          # paths:
+            # - path: /
+              # pathType: Prefix
+      # tls:
+        # - hosts:
+            # - *host
+          # secretName: &tls "varken-tls"
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
+    persistence:
+      config:
+        enabled: true
+        mountPath: /config
+        existingClaim: varken-config-v1
+    resources:
+      requests:
+        cpu: 15m
+        memory: 1238M
+      limits:
+        memory: 1781M
