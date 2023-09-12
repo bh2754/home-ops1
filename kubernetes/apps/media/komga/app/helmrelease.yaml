@@ -1,12 +1,11 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2beta1.json
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: &app komga
-  namespace: default
+  namespace: media
 spec:
-  interval: 30m
+  interval: 15m
   chart:
     spec:
       chart: app-template
@@ -15,63 +14,58 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  maxHistory: 2
   install:
     createNamespace: true
     remediation:
-      retries: 3
+      retries: 5
   upgrade:
-    cleanupOnFail: true
     remediation:
-      retries: 3
-  uninstall:
-    keepHistory: false
+      retries: 5
+
   values:
+
+#   controller:
+#     type: statefulset
+
     image:
-      repository: gotson/komga
-      tag: "1.3.1"
+      repository: ghcr.io/cbc02009/komga
+      tag: 1.4.0@sha256:7c358e297404884f54c28d61a224548704f029b792eb3d384199b0d3c641824d
+
     env:
-      TZ: "${TIMEZONE}"
-      SERVER_PORT: &port 8080
+      KOMGA_CONFIGDIR: "/config"
+      SERVER_PORT: &port 8443
+
     service:
       main:
         ports:
           http:
             port: *port
+
     ingress:
       main:
         enabled: true
+        ingressClassName: "internal"
         annotations:
-          hajimari.io/icon: mdi:ideogram-cjk-variant
-        ingressClassName: "nginx"
+          hajimari.io/enable: "true"
+          hajimari.io/icon: "television-box"
+          hajimari.io/appName: komga
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_CLUSTER_DOMAIN}"
+          - host: &host "{{ .Release.Name }}.${EXTERNAL_DOMAIN}"
             paths:
               - path: /
                 pathType: Prefix
         tls:
           - hosts:
               - *host
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
-      supplementalGroups:
-        - 100
+
     persistence:
       config:
         enabled: true
         existingClaim: komga-config-v1
-      comics:
+
+      media:
         enabled: true
         type: nfs
-        server: "${NFS_SERVER}"
+        server: "${NFS_SERVER"
         path: /Media/comics
-        mountPath: /Media/comics
-    resources:
-      requests:
-        memory: 4282M
-        cpu: 15m
-      limits:
-        memory: 4282M
+        mountPath: /media
