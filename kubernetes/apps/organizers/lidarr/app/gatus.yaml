@@ -10,7 +10,7 @@ data:
   config.yaml: |
     endpoints:
       - name: Lidarr
-        group: external
+        group: Organizers
         url: https://lidarr.bharris.vip
         interval: 1m
         client:

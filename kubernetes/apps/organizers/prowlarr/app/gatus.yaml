@@ -2,24 +2,18 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prowlarr-gatus-ep
+  name: pidarr-gatus-ep
   namespace: organizers
   labels:
     gatus.io/enabled: "true"
 data:
   config.yaml: |
     endpoints:
-      - name: Prowlarr
-        group: guarded
-        url: 1.1.1.1
+      - name: Pidarr
+        group: Organizers
+        url: https://pidarr.bharris.vip
         interval: 1m
-        ui:
-          hide-hostname: true
-          hide-url: true
-        dns:
-          query-name: prowlarr.${SECRET_DOMAIN}
-          query-type: A
+        client:
+          dns-resolver: tcp://10.0.111.20:53
         conditions:
-          - "len([BODY]) == 0"
-        alerts:
-          - type: discord
+          - "[STATUS] == 200"
