@@ -10,7 +10,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: k8s-gitops-kubernetes
+    name: home-kubernetes
   wait: true
   dependsOn:
     - name: cluster-apps-loki
@@ -27,7 +27,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: k8s-gitops-kubernetes
+    name: home-kubernetes
   wait: false # no flux ks dependents
   dependsOn:
     - name: cluster-apps-vector-aggregator
