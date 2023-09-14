@@ -145,7 +145,7 @@ spec:
     backend:
       replicas: 2
       persistence:
-        storageClass: local-pathpath
+        storageClass: local-path
       extraVolumeMounts:
         - name: rules
           mountPath: /rules/fake
