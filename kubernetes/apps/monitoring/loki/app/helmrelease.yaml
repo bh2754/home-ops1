@@ -36,8 +36,6 @@ spec:
           grpc_listen_port: 9095
 
         memberlist:
-          service:
-            publishNotReadyAddresses: false
           join_members: ["loki-memberlist"]
 
         limits_config:
