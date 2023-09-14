@@ -90,7 +90,7 @@ spec:
             jsonData:
               prometheusType: Prometheus
             isDefault: true
-           - name: Loki
+          - name: Loki
             type: loki
             uid: loki
             access: proxy
