@@ -58,14 +58,14 @@ spec:
                 target_label: 'destination_port'
               - source_labels: ['__syslog_message_DST']
                 target_label: 'destination_ip'
-    extraPorts:
-      syslog:
-        name: syslog
-        containerPort: 1514
-        service:
-          type: LoadBalancer
-          annotations:
-            io.cilium/lb-ipam-ips: "${PROMTAIL_ADDR}"
+#   extraPorts:
+#     syslog:
+#       name: syslog
+#       containerPort: 1514
+#       service:
+#         type: LoadBalancer
+#         annotations:
+#           io.cilium/lb-ipam-ips: "${PROMTAIL_ADDR}"
 
     extraVolumes:
       - name: journal
