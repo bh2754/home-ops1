@@ -6,3 +6,4 @@ metadata:
   namespace: flux-system
 data:
   METALLB_TDARR: "10.0.111.25"
+  VECTOR_IP: "10.0.111.25"
