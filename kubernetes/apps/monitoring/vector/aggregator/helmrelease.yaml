@@ -11,7 +11,7 @@ spec:
       chart: vector
       version: 0.24.1
       sourceRef:
-        kind: HelmRepository
+        kind: HelmRepositorgy
         name: vector
         namespace: flux-system
   dependsOn:
@@ -42,7 +42,7 @@ spec:
           type: loki
           inputs:
             - journal_logs
-          endpoint: http://loki-gateway.svc.monitoring:80
+          endpoint: http://loki-gateway.monitoring.svc:80
           encoding:
             codec: json
           batch:
@@ -57,7 +57,7 @@ spec:
           type: loki
           inputs:
             - kubernetes_logs
-          endpoint: http://loki-gateway.svc.monitoring:80
+          endpoint: http://loki-gateway.monitoring.svc:80
           encoding:
             codec: json
           batch:
