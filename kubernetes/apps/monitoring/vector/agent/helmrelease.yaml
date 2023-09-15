@@ -39,13 +39,13 @@ spec:
           type: vector
           inputs:
             - journal_logs
-          address: vector-aggregator:6000
+          address: "vector-aggregator.monitoring.svc.cluster.local:6000"
           version: "2"
         kubernetes_sink:
           type: vector
           inputs:
             - kubernetes_logs
-          address: vector-aggregator:6010
+          address: "vector-aggregator.monitoring.svc.cluster.local:6010"
           version: "2"
         prometheus_sink:
           type: prometheus_exporter
