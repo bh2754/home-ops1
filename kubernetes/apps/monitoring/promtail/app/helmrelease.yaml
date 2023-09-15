@@ -68,9 +68,9 @@ spec:
             io.cilium/lb-ipam-ips: "${PROMTAIL_ADDR}"
 
     extraVolumes:
-       - name: journal
+      - name: journal
         hostPath:
-          path: /var/log/journal
+        path: /var/log/journal
     extraVolumeMounts:
       - name: journal
         mountPath: /var/log/journal
