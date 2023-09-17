@@ -1,4 +1,48 @@
 {
+  "__requires": [
+    {
+      "type": "panel",
+      "id": "gauge",
+      "name": "Gauge",
+      "version": ""
+    },
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "7.2.0"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "heatmap",
+      "name": "Heatmap",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table-old",
+      "name": "Table (old)",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
@@ -8,32 +52,21 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
-        "target": {
-          "limit": 100,
-          "matchAny": false,
-          "tags": [],
-          "type": "dashboard"
-        },
         "type": "dashboard"
       }
     ]
   },
   "description": "Ceph Cluster overview.\r\n",
   "editable": true,
-  "fiscalYearStartMonth": 0,
   "gnetId": 2842,
   "graphTooltip": 0,
-  "id": 7,
-  "iteration": 1638881716217,
+  "id": null,
+  "iteration": 1603448668351,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -42,37 +75,47 @@
       },
       "id": 37,
       "panels": [],
+      "repeat": null,
       "title": "CLUSTER STATE",
       "type": "row"
     },
     {
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "0": {
-                  "text": "HEALTHY"
-                },
-                "1": {
-                  "text": "WARNING"
-                },
-                "2": {
-                  "text": "ERROR"
-                }
-              },
-              "type": "value"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             },
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 1,
+              "op": "=",
+              "text": "WARNING",
+              "type": 1,
+              "value": "1"
+            },
+            {
+              "id": 2,
+              "op": "=",
+              "text": "HEALTHY",
+              "type": 1,
+              "value": "0"
+            },
+            {
+              "id": 3,
+              "op": "=",
+              "text": "ERROR",
+              "type": 1,
+              "value": "2"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -110,52 +153,48 @@
         "justifyMode": "center",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
-          "exemplar": false,
-          "expr": "sum without (instance) (ceph_health_status)",
+          "expr": "sum without (instance) (ceph_health_status{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": " ",
           "refId": "A",
           "step": 300
         }
       ],
+      "title": "",
       "transparent": true,
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "decimals": 1,
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -176,6 +215,7 @@
         "y": 1
       },
       "id": 92,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -184,19 +224,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w_in_bytes[5m]))",
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w_in_bytes{cluster=\"$cluster\"}[5m]))",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -206,24 +248,22 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "decimals": 1,
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -244,6 +284,7 @@
         "y": 1
       },
       "id": 93,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -252,19 +293,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_r_out_bytes[5m]))",
+          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_r_out_bytes{cluster=\"$cluster\"}[5m]))",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -274,23 +317,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -320,19 +361,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance) (ceph_cluster_total_bytes)",
+          "expr": "sum without (instance) (ceph_cluster_total_bytes{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -343,25 +386,23 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
           "max": 1,
           "min": 0,
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -396,20 +437,22 @@
       "options": {
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance) ((ceph_cluster_total_bytes-ceph_cluster_total_used_bytes)/ceph_cluster_total_bytes)",
+          "expr": "sum without (instance) ((ceph_cluster_total_bytes{cluster=\"$cluster\"}-ceph_cluster_total_used_bytes{cluster=\"$cluster\"})/ceph_cluster_total_bytes{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -420,23 +463,21 @@
       "type": "gauge"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -465,6 +506,7 @@
         "y": 1
       },
       "id": 48,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -473,19 +515,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance, pool_id) (ceph_pool_objects)",
+          "expr": "sum without (instance, pool_id) (ceph_pool_objects{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -495,24 +539,22 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "decimals": 1,
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -533,6 +575,7 @@
         "y": 1
       },
       "id": 99,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -541,19 +584,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["delta"],
+          "calcs": [
+            "delta"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_osd_op_w_in_bytes)",
+          "expr": "sum without (instance, ceph_daemon) (ceph_osd_op_w_in_bytes{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -563,24 +608,22 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "decimals": 1,
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -601,6 +644,7 @@
         "y": 1
       },
       "id": 100,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -609,19 +653,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["delta"],
+          "calcs": [
+            "delta"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_osd_op_r_out_bytes)",
+          "expr": "sum without (instance, ceph_daemon) (ceph_osd_op_r_out_bytes{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -631,13 +677,13 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -666,6 +712,7 @@
         "y": 4
       },
       "id": 75,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -674,16 +721,18 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "count(ALERTS{alertstate='firing',alertname=~'^CephCluster.*'}) OR vector(0)",
+          "expr": "count(ALERTS{cluster='$cluster',alertstate='firing',alertname=~'^CephCluster.*'}) OR vector(0)",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -697,24 +746,22 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "decimals": 2,
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -735,6 +782,7 @@
         "y": 4
       },
       "id": 97,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -743,19 +791,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_w[5m]))",
+          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_w{cluster=\"$cluster\"}[5m]))",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -765,24 +815,22 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "decimals": 2,
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -803,6 +851,7 @@
         "y": 4
       },
       "id": 96,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -811,19 +860,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_r[5m]))",
+          "expr": "sum without (ceph_daemon, instance) (irate(ceph_osd_op_r{cluster=\"$cluster\"}[5m]))",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -833,23 +884,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -879,19 +928,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance) (ceph_cluster_total_used_bytes)",
+          "expr": "sum without (instance) (ceph_cluster_total_used_bytes{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -902,23 +953,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -943,6 +992,7 @@
         "y": 4
       },
       "id": 102,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -951,16 +1001,18 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_mon_num_sessions)",
+          "expr": "sum without (instance, ceph_daemon) (ceph_mon_num_sessions{cluster='$cluster'})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -972,23 +1024,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1026,19 +1076,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "count without (instance, ceph_daemon) (ceph_mon_quorum_status)",
+          "expr": "count without (instance, ceph_daemon) (ceph_mon_quorum_status{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1050,10 +1102,7 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1062,27 +1111,26 @@
       },
       "id": 38,
       "panels": [],
+      "repeat": null,
       "title": "OSD STATE",
       "type": "row"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1111,6 +1159,7 @@
         "y": 8
       },
       "id": 27,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1119,19 +1168,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "count without (instance, ceph_daemon) (ceph_osd_up) - count without (instance, ceph_daemon) (ceph_osd_in)",
+          "expr": "count without (instance, ceph_daemon) (ceph_osd_up{cluster=\"$cluster\"}) - count without (instance, ceph_daemon) (ceph_osd_in{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1142,23 +1193,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1187,6 +1236,7 @@
         "y": 8
       },
       "id": 29,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1195,19 +1245,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "count(ceph_osd_up == 0.0) OR vector(0)",
+          "expr": "count(ceph_osd_up{cluster=\"$cluster\"} == 0.0) OR vector(0)",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1218,23 +1270,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1259,6 +1309,7 @@
         "y": 8
       },
       "id": 28,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1267,19 +1318,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_osd_up)",
+          "expr": "sum without (instance, ceph_daemon) (ceph_osd_up{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1290,23 +1343,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1331,6 +1382,7 @@
         "y": 8
       },
       "id": 26,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1339,19 +1391,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (ceph_osd_in)",
+          "expr": "sum without (instance, ceph_daemon) (ceph_osd_in{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1362,23 +1416,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1407,6 +1459,7 @@
         "y": 8
       },
       "id": 30,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1415,19 +1468,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (ceph_osd_numpg)",
+          "expr": "avg without (instance, ceph_daemon) (ceph_osd_numpg{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1438,23 +1493,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1483,6 +1536,7 @@
         "y": 8
       },
       "id": 31,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1491,19 +1545,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (ceph_osd_apply_latency_ms)",
+          "expr": "avg without (instance, ceph_daemon) (ceph_osd_apply_latency_ms{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1514,23 +1570,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1559,6 +1613,7 @@
         "y": 8
       },
       "id": 32,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1567,19 +1622,21 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "avg(ceph_osd_commit_latency_ms)",
+          "expr": "avg(ceph_osd_commit_latency_ms{cluster=\"$cluster\"})",
           "format": "time_series",
           "instant": true,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A",
@@ -1590,24 +1647,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "color": "#299c46",
-                  "text": "0"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "0",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1636,6 +1690,7 @@
         "y": 8
       },
       "id": 51,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1644,16 +1699,18 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_w_latency_sum[5m]) / rate(ceph_osd_op_w_latency_count[5m]) >= 0)",
+          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_w_latency_sum{cluster=\"$cluster\"}[5m]) / rate(ceph_osd_op_w_latency_count{cluster=\"$cluster\"}[5m]) >= 0)",
           "format": "time_series",
           "instant": false,
           "interval": "",
@@ -1666,23 +1723,21 @@
       "type": "stat"
     },
     {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "cacheTimeout": null,
+      "datasource": "PBFA97CFB590B2093",
       "fieldConfig": {
         "defaults": {
+          "custom": {},
           "mappings": [
             {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
+              "id": 0,
+              "op": "=",
+              "text": "N/A",
+              "type": 1,
+              "value": "null"
             }
           ],
+          "nullValueMode": "connected",
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -1711,6 +1766,7 @@
         "y": 8
       },
       "id": 50,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -1719,16 +1775,18 @@
         "justifyMode": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
-          "calcs": ["lastNotNull"],
+          "calcs": [
+            "lastNotNull"
+          ],
           "fields": "",
           "values": false
         },
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_r_latency_sum[5m])/rate(ceph_osd_op_r_latency_count[5m]) >= 0)",
+          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_r_latency_sum{cluster=\"$cluster\"}[5m])/rate(ceph_osd_op_r_latency_count{cluster=\"$cluster\"}[5m]) >= 0)",
           "format": "time_series",
           "instant": true,
           "interval": "",
@@ -1742,10 +1800,7 @@
     },
     {
       "collapsed": true,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1756,10 +1811,7 @@
       "panels": [
         {
           "columns": [],
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
+          "datasource": "PBFA97CFB590B2093",
           "fieldConfig": {
             "defaults": {
               "custom": {}
@@ -1775,6 +1827,7 @@
           },
           "id": 70,
           "links": [],
+          "pageSize": null,
           "scroll": true,
           "showHeader": true,
           "sort": {
@@ -1792,6 +1845,7 @@
             {
               "alias": "",
               "align": "auto",
+              "colorMode": null,
               "colors": [
                 "rgba(245, 54, 54, 0.9)",
                 "rgba(237, 129, 40, 0.89)",
@@ -1806,7 +1860,7 @@
           ],
           "targets": [
             {
-              "expr": "ALERTS{alertstate='firing'}",
+              "expr": "ALERTS{cluster='$cluster', alertstate='firing'}",
               "format": "table",
               "instant": true,
               "intervalFactor": 1,
@@ -1820,10 +1874,7 @@
         },
         {
           "columns": [],
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
+          "datasource": "PBFA97CFB590B2093",
           "fieldConfig": {
             "defaults": {
               "custom": {}
@@ -1839,6 +1890,7 @@
           },
           "id": 105,
           "links": [],
+          "pageSize": null,
           "scroll": true,
           "showHeader": true,
           "sort": {
@@ -1856,6 +1908,7 @@
             {
               "alias": "",
               "align": "auto",
+              "colorMode": null,
               "colors": [
                 "rgba(245, 54, 54, 0.9)",
                 "rgba(237, 129, 40, 0.89)",
@@ -1870,7 +1923,7 @@
           ],
           "targets": [
             {
-              "expr": "topk(5,sort_desc(ceph_osd_apply_latency_ms + ceph_osd_commit_latency_ms))",
+              "expr": "topk(5,sort_desc(ceph_osd_apply_latency_ms{cluster='$cluster'} + ceph_osd_commit_latency_ms{cluster='$cluster'}))",
               "format": "table",
               "instant": true,
               "intervalFactor": 1,
@@ -1884,10 +1937,7 @@
         },
         {
           "columns": [],
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
+          "datasource": "PBFA97CFB590B2093",
           "fieldConfig": {
             "defaults": {
               "custom": {}
@@ -1903,6 +1953,7 @@
           },
           "id": 103,
           "links": [],
+          "pageSize": null,
           "scroll": true,
           "showHeader": true,
           "sort": {
@@ -1920,6 +1971,7 @@
             {
               "alias": "",
               "align": "auto",
+              "colorMode": null,
               "colors": [
                 "rgba(245, 54, 54, 0.9)",
                 "rgba(237, 129, 40, 0.89)",
@@ -1934,7 +1986,7 @@
           ],
           "targets": [
             {
-              "expr": "ceph_osd_up == 0",
+              "expr": "ceph_osd_up{cluster=\"$cluster\"} == 0",
               "format": "table",
               "instant": true,
               "intervalFactor": 1,
@@ -1952,10 +2004,7 @@
     },
     {
       "collapsed": true,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1969,10 +2018,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
+          "datasource": "PBFA97CFB590B2093",
           "fieldConfig": {
             "defaults": {
               "custom": {}
@@ -2016,7 +2062,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "count by (ceph_version) (ceph_osd_metadata)",
+              "expr": "count by (ceph_version) (ceph_osd_metadata{cluster='$cluster'})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -2026,7 +2072,9 @@
             }
           ],
           "thresholds": [],
+          "timeFrom": null,
           "timeRegions": [],
+          "timeShift": null,
           "title": "Ceph OSD Versions",
           "tooltip": {
             "shared": true,
@@ -2035,7 +2083,9 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
+            "name": null,
             "show": true,
             "values": []
           },
@@ -2043,17 +2093,24 @@
             {
               "decimals": 0,
               "format": "short",
+              "label": null,
               "logBase": 1,
+              "max": null,
+              "min": null,
               "show": true
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
+              "max": null,
+              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false
+            "align": false,
+            "alignLevel": null
           }
         },
         {
@@ -2061,10 +2118,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
+          "datasource": "PBFA97CFB590B2093",
           "fieldConfig": {
             "defaults": {
               "custom": {}
@@ -2108,7 +2162,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "count by (ceph_version)(ceph_mon_metadata)",
+              "expr": "count by (ceph_version)(ceph_mon_metadata{cluster='$cluster'})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -2118,7 +2172,9 @@
             }
           ],
           "thresholds": [],
+          "timeFrom": null,
           "timeRegions": [],
+          "timeShift": null,
           "title": "Ceph Mon Versions",
           "tooltip": {
             "shared": true,
@@ -2127,7 +2183,9 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
+            "name": null,
             "show": true,
             "values": []
           },
@@ -2137,16 +2195,22 @@
               "format": "short",
               "label": "",
               "logBase": 1,
+              "max": null,
+              "min": null,
               "show": true
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
+              "max": null,
+              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false
+            "align": false,
+            "alignLevel": null
           }
         },
         {
@@ -2154,10 +2218,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
+          "datasource": "PBFA97CFB590B2093",
           "fieldConfig": {
             "defaults": {
               "custom": {}
@@ -2201,7 +2262,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "count by (ceph_version)(ceph_mds_metadata)",
+              "expr": "count by (ceph_version)(ceph_mds_metadata{cluster='$cluster'})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -2211,7 +2272,9 @@
             }
           ],
           "thresholds": [],
+          "timeFrom": null,
           "timeRegions": [],
+          "timeShift": null,
           "title": "Ceph MDS Versions",
           "tooltip": {
             "shared": true,
@@ -2220,7 +2283,9 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
+            "name": null,
             "show": true,
             "values": []
           },
@@ -2230,16 +2295,22 @@
               "format": "short",
               "label": "",
               "logBase": 1,
+              "max": null,
+              "min": null,
               "show": true
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
+              "max": null,
+              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false
+            "align": false,
+            "alignLevel": null
           }
         },
         {
@@ -2247,10 +2318,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
-          },
+          "datasource": "PBFA97CFB590B2093",
           "fieldConfig": {
             "defaults": {
               "custom": {}
@@ -2294,7 +2362,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "count by (ceph_version)(ceph_rgw_metadata)",
+              "expr": "count by (ceph_version)(ceph_rgw_metadata{cluster='$cluster'})",
               "format": "time_series",
               "interval": "",
               "intervalFactor": 1,
@@ -2304,7 +2372,9 @@
             }
           ],
           "thresholds": [],
+          "timeFrom": null,
           "timeRegions": [],
+          "timeShift": null,
           "title": "Ceph RGW Versions",
           "tooltip": {
             "shared": true,
@@ -2313,7 +2383,9 @@
           },
           "type": "graph",
           "xaxis": {
+            "buckets": null,
             "mode": "time",
+            "name": null,
             "show": true,
             "values": []
           },
@@ -2323,16 +2395,22 @@
               "format": "short",
               "label": "",
               "logBase": 1,
+              "max": null,
+              "min": null,
               "show": true
             },
             {
               "format": "short",
+              "label": null,
               "logBase": 1,
+              "max": null,
+              "min": null,
               "show": true
             }
           ],
           "yaxis": {
-            "align": false
+            "align": false,
+            "alignLevel": null
           }
         }
       ],
@@ -2341,10 +2419,7 @@
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -2353,6 +2428,7 @@
       },
       "id": 39,
       "panels": [],
+      "repeat": null,
       "title": "CLUSTER",
       "type": "row"
     },
@@ -2368,12 +2444,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": "PBFA97CFB590B2093",
       "editable": true,
       "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 4,
       "fillGradient": 0,
       "grid": {},
@@ -2386,7 +2465,7 @@
       "height": "300",
       "hiddenSeries": false,
       "id": 1,
-      "interval": "$__interval",
+      "interval": "$interval",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -2406,7 +2485,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2423,27 +2502,27 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance) (ceph_cluster_total_bytes)",
+          "expr": "sum without (instance) (ceph_cluster_total_bytes{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Total Capacity",
           "refId": "C",
           "step": 300
         },
         {
-          "expr": "sum without (instance) (ceph_cluster_total_bytes-ceph_cluster_total_used_bytes)",
+          "expr": "sum without (instance) (ceph_cluster_total_bytes{cluster=\"$cluster\"}-ceph_cluster_total_used_bytes{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Available",
           "refId": "A",
           "step": 300
         },
         {
-          "expr": "sum without (instance) (ceph_cluster_total_used_bytes)",
+          "expr": "sum without (instance) (ceph_cluster_total_used_bytes{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Used",
           "refId": "B",
@@ -2451,7 +2530,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Capacity",
       "tooltip": {
         "msResolution": false,
@@ -2461,7 +2542,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -2469,19 +2552,25 @@
         {
           "$$hashKey": "object:905",
           "format": "bytes",
+          "label": null,
           "logBase": 1,
+          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:906",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -2495,13 +2584,16 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": "PBFA97CFB590B2093",
       "decimals": 0,
       "editable": true,
       "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "grid": {},
@@ -2514,7 +2606,7 @@
       "height": "300",
       "hiddenSeries": false,
       "id": 3,
-      "interval": "$__interval",
+      "interval": "$interval",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -2533,7 +2625,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2543,18 +2635,18 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w[5m]))",
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w{cluster=\"$cluster\"}[5m]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Write",
           "refId": "A",
           "step": 300
         },
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_r[5m]))",
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_r{cluster=\"$cluster\"}[5m]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Read",
           "refId": "B",
@@ -2562,7 +2654,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "IOPS",
       "tooltip": {
         "msResolution": true,
@@ -2572,7 +2666,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -2582,19 +2678,23 @@
           "format": "none",
           "label": "",
           "logBase": 1,
+          "max": null,
           "min": 0,
           "show": true
         },
         {
           "$$hashKey": "object:2412",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
           "min": 0,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -2602,12 +2702,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": "PBFA97CFB590B2093",
       "editable": true,
       "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "grid": {},
@@ -2620,7 +2723,7 @@
       "height": "300",
       "hiddenSeries": false,
       "id": 7,
-      "interval": "$__interval",
+      "interval": "$interval",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -2639,7 +2742,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2649,18 +2752,18 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w_in_bytes[5m]))",
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_w_in_bytes{cluster=\"$cluster\"}[5m]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Write",
           "refId": "A",
           "step": 300
         },
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_r_out_bytes[5m]))",
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_op_r_out_bytes{cluster=\"$cluster\"}[5m]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Read",
           "refId": "B",
@@ -2668,7 +2771,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Throughput",
       "tooltip": {
         "msResolution": false,
@@ -2678,7 +2783,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -2686,20 +2793,25 @@
         {
           "$$hashKey": "object:2382",
           "format": "decbytes",
+          "label": null,
           "logBase": 1,
+          "max": null,
           "min": 0,
           "show": true
         },
         {
           "$$hashKey": "object:2383",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
           "min": 0,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -2707,11 +2819,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": "PBFA97CFB590B2093",
       "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2741,7 +2856,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2751,7 +2866,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum((ceph_pool_num_bytes_recovered) *on (instance, pool_id) group_left(name)(ceph_pool_metadata)) by (name)",
+          "expr": "sum((ceph_pool_num_bytes_recovered{cluster='$cluster'}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{cluster='$cluster'})) by (name)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2760,7 +2875,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Pool Bytes Recovered",
       "tooltip": {
         "shared": true,
@@ -2769,7 +2886,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -2779,18 +2898,23 @@
           "format": "bytes",
           "label": "",
           "logBase": 1,
+          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:2149",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -2798,11 +2922,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": "PBFA97CFB590B2093",
       "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -2832,7 +2959,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2842,7 +2969,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, pool_id) ((ceph_pool_num_objects_recovered) *on (instance, pool_id) group_left(name)(ceph_pool_metadata))",
+          "expr": "sum without (instance, pool_id) ((ceph_pool_num_objects_recovered{cluster='$cluster'}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{cluster='$cluster'}))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2851,7 +2978,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Pool Objects Recovered",
       "tooltip": {
         "shared": true,
@@ -2860,7 +2989,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -2870,18 +3001,23 @@
           "format": "short",
           "label": "",
           "logBase": 1,
+          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:2149",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -2889,9 +3025,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -2922,7 +3061,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2932,7 +3071,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance) ((ceph_pool_objects) *on (instance, pool_id) group_left(name)(ceph_pool_metadata))",
+          "expr": "sum without (instance) ((ceph_pool_objects{cluster='$cluster'}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{cluster='$cluster'}))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -2941,7 +3080,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Objects Per Pool",
       "tooltip": {
         "shared": true,
@@ -2950,7 +3091,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -2958,19 +3101,25 @@
         {
           "$$hashKey": "object:795",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:796",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -2978,9 +3127,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -3009,7 +3161,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3019,7 +3171,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance) ((ceph_pool_quota_bytes) *on (instance, pool_id) group_left(name)(ceph_pool_metadata))",
+          "expr": "sum without (instance) ((ceph_pool_quota_bytes{cluster='$cluster'}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{cluster='$cluster'}))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3028,7 +3180,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Pool Quota Bytes",
       "tooltip": {
         "shared": true,
@@ -3037,7 +3191,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -3045,19 +3201,25 @@
         {
           "$$hashKey": "object:685",
           "format": "bytes",
+          "label": null,
           "logBase": 1,
+          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:686",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -3065,9 +3227,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -3098,7 +3263,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3108,7 +3273,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance) (ceph_pool_quota_objects) *on (instance, pool_id) group_left(name)(ceph_pool_metadata)",
+          "expr": "sum without (instance) (ceph_pool_quota_objects{cluster='$cluster'}) *on (instance, pool_id) group_left(name)(ceph_pool_metadata{cluster='$cluster'})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3117,7 +3282,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Pool Objects Quota",
       "tooltip": {
         "shared": true,
@@ -3126,7 +3293,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -3134,19 +3303,25 @@
         {
           "$$hashKey": "object:656",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
           "min": "0",
           "show": true
         },
         {
           "$$hashKey": "object:657",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -3154,9 +3329,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -3187,7 +3365,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3197,7 +3375,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "count without (instance, ceph_daemon) (ceph_bluestore_commit_lat_count)",
+          "expr": "count without (instance, ceph_daemon) (ceph_bluestore_commit_lat_count{cluster='$cluster'})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3205,7 +3383,7 @@
           "refId": "A"
         },
         {
-          "expr": "count without (instance, ceph_daemon) (ceph_filestore_journal_latency_count)",
+          "expr": "count without (instance, ceph_daemon) (ceph_filestore_journal_latency_count{cluster='$cluster'})",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -3214,7 +3392,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "OSD Type Count",
       "tooltip": {
         "shared": true,
@@ -3223,32 +3403,38 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -3257,6 +3443,7 @@
       },
       "id": 41,
       "panels": [],
+      "repeat": null,
       "title": "OBJECTS",
       "type": "row"
     },
@@ -3265,12 +3452,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": "PBFA97CFB590B2093",
       "editable": true,
       "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "grid": {},
@@ -3301,7 +3491,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3318,7 +3508,7 @@
         {
           "expr": "sum without (instance, pool_id) (ceph_pool_objects)",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Total",
           "refId": "A",
@@ -3326,7 +3516,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Objects in the Cluster",
       "tooltip": {
         "msResolution": false,
@@ -3336,24 +3528,33 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -3361,12 +3562,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": "PBFA97CFB590B2093",
       "editable": true,
       "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "grid": {},
@@ -3397,7 +3601,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3412,188 +3616,190 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_active)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_active{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Active",
           "refId": "M"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_clean)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_clean{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Clean",
           "refId": "U"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_peering)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_peering{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Peering",
           "refId": "I"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_degraded)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_degraded{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Degraded",
           "refId": "B",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_stale)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_stale{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Stale",
           "refId": "C",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_unclean_pgs)",
+          "expr": "sum without (instance, pool_id) (ceph_unclean_pgs{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Unclean",
           "refId": "D",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_undersized)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_undersized{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Undersized",
           "refId": "E",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_incomplete)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_incomplete{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Incomplete",
           "refId": "G"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_forced_backfill)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_forced_backfill{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Forced Backfill",
           "refId": "H"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_inconsistent)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_inconsistent{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Inconsistent",
           "refId": "F"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_forced_recovery)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_forced_recovery{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Forced Recovery",
           "refId": "J"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_creating)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_creating{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Creating",
           "refId": "K"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_wait_backfill)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_wait_backfill{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Wait Backfill",
           "refId": "L"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_deep)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_deep{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Deep",
           "refId": "N"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_scrubbing)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_scrubbing{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Scrubbing",
           "refId": "O"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_recovering)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_recovering{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Recovering",
           "refId": "P"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_repair)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_repair{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Repair",
           "refId": "Q"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_down)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_down{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Down",
           "refId": "R"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_peered)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_peered{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Peered",
           "refId": "S"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_backfill)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_backfill{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Backfill",
           "refId": "T"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_remapped)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_remapped{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Remapped",
           "refId": "V"
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_backfill_toofull)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_backfill_toofull{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Backfill Toofull",
           "refId": "W"
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "PGs State",
       "tooltip": {
         "msResolution": false,
@@ -3603,25 +3809,33 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
+          "label": null,
           "logBase": 2,
+          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -3629,12 +3843,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": "PBFA97CFB590B2093",
       "editable": true,
       "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "grid": {},
@@ -3665,7 +3882,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3680,27 +3897,27 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_degraded)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_degraded{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Degraded",
           "refId": "F",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_stale)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_stale{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Stale",
           "refId": "A",
           "step": 300
         },
         {
-          "expr": "sum without (instance, pool_id) (ceph_pg_undersized)",
+          "expr": "sum without (instance, pool_id) (ceph_pg_undersized{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "Undersized",
           "refId": "B",
@@ -3708,7 +3925,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Stuck PGs",
       "tooltip": {
         "msResolution": false,
@@ -3718,25 +3937,33 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
           "min": 0,
           "show": true
         },
         {
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -3744,12 +3971,15 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": "PBFA97CFB590B2093",
       "editable": true,
       "error": false,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
       "fillGradient": 0,
       "grid": {},
@@ -3778,7 +4008,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -3788,9 +4018,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_recovery_ops[$__rate_interval]))",
+          "expr": "sum without (instance, ceph_daemon) (irate(ceph_osd_recovery_ops{cluster=\"$cluster\"}[$__rate_interval]))",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "OPS",
           "refId": "A",
@@ -3798,7 +4028,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Recovery Operations",
       "tooltip": {
         "msResolution": false,
@@ -3808,7 +4040,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -3816,27 +4050,30 @@
         {
           "$$hashKey": "object:2458",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
           "min": 0,
           "show": true
         },
         {
           "$$hashKey": "object:2459",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -3845,11 +4082,15 @@
       },
       "id": 40,
       "panels": [],
+      "repeat": null,
       "title": "LATENCY",
       "type": "row"
     },
     {
-      "cards": {},
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
       "color": {
         "cardColor": "#b4ff00",
         "colorScale": "sqrt",
@@ -3858,9 +4099,12 @@
         "mode": "opacity"
       },
       "dataFormat": "timeseries",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -3879,10 +4123,10 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "ceph_osd_apply_latency_ms",
+          "expr": "ceph_osd_apply_latency_ms{cluster='$cluster'}",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -3897,19 +4141,26 @@
       "xAxis": {
         "show": true
       },
+      "xBucketNumber": null,
       "xBucketSize": "",
       "yAxis": {
+        "decimals": null,
         "format": "ms",
         "logBase": 2,
+        "max": null,
         "min": "0",
         "show": true,
         "splitFactor": 1
       },
       "yBucketBound": "auto",
+      "yBucketNumber": null,
       "yBucketSize": 10
     },
     {
-      "cards": {},
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
       "color": {
         "cardColor": "#65c5db",
         "colorScale": "sqrt",
@@ -3918,9 +4169,12 @@
         "mode": "opacity"
       },
       "dataFormat": "timeseries",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -3939,10 +4193,10 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "ceph_osd_commit_latency_ms",
+          "expr": "ceph_osd_commit_latency_ms{cluster='$cluster'}",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "refId": "A"
         }
@@ -3956,17 +4210,26 @@
       "xAxis": {
         "show": true
       },
+      "xBucketNumber": null,
       "xBucketSize": "",
       "yAxis": {
+        "decimals": null,
         "format": "ms",
         "logBase": 2,
+        "max": null,
         "min": "0",
-        "show": true
+        "show": true,
+        "splitFactor": null
       },
-      "yBucketBound": "auto"
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
     },
     {
-      "cards": {},
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
       "color": {
         "cardColor": "#806eb7",
         "colorScale": "sqrt",
@@ -3975,9 +4238,12 @@
         "mode": "opacity"
       },
       "dataFormat": "timeseries",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -3996,10 +4262,10 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "rate(ceph_osd_op_r_latency_sum[5m]) / rate(ceph_osd_op_r_latency_count[5m]) >= 0",
+          "expr": "rate(ceph_osd_op_r_latency_sum{cluster=\"$cluster\"}[5m]) / rate(ceph_osd_op_r_latency_count{cluster=\"$cluster\"}[5m]) >= 0",
           "format": "time_series",
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "refId": "A"
         }
@@ -4013,18 +4279,26 @@
       "xAxis": {
         "show": true
       },
+      "xBucketNumber": null,
       "xBucketSize": "",
       "yAxis": {
         "decimals": 2,
         "format": "ms",
         "logBase": 2,
+        "max": null,
         "min": "0",
-        "show": true
+        "show": true,
+        "splitFactor": null
       },
-      "yBucketBound": "auto"
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
     },
     {
-      "cards": {},
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
       "color": {
         "cardColor": "#f9934e",
         "colorScale": "sqrt",
@@ -4033,9 +4307,12 @@
         "mode": "opacity"
       },
       "dataFormat": "timeseries",
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -4054,11 +4331,11 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "rate(ceph_osd_op_w_latency_sum[5m]) / rate(ceph_osd_op_w_latency_count[5m]) >= 0",
+          "expr": "rate(ceph_osd_op_w_latency_sum{cluster=\"$cluster\"}[5m]) / rate(ceph_osd_op_w_latency_count{cluster=\"$cluster\"}[5m]) >= 0",
           "format": "time_series",
           "hide": false,
           "instant": false,
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "",
           "refId": "A"
@@ -4073,24 +4350,32 @@
       "xAxis": {
         "show": true
       },
+      "xBucketNumber": null,
       "xBucketSize": "",
       "yAxis": {
         "decimals": 2,
         "format": "ms",
         "logBase": 2,
+        "max": null,
         "min": "0",
-        "show": true
+        "show": true,
+        "splitFactor": null
       },
-      "yBucketBound": "auto"
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -4121,7 +4406,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -4131,7 +4416,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg without (instance,ceph_daemon) (rate(ceph_osd_op_r_latency_sum[5m]) / rate(ceph_osd_op_r_latency_count[5m]) >= 0)",
+          "expr": "avg without (instance,ceph_daemon) (rate(ceph_osd_op_r_latency_sum{cluster=\"$cluster\"}[5m]) / rate(ceph_osd_op_r_latency_count{cluster=\"$cluster\"}[5m]) >= 0)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -4139,7 +4424,7 @@
           "refId": "A"
         },
         {
-          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_w_latency_sum[5m]) / rate(ceph_osd_op_w_latency_count[5m]) >= 0)",
+          "expr": "avg without (instance, ceph_daemon) (rate(ceph_osd_op_w_latency_sum{cluster=\"$cluster\"}[5m]) / rate(ceph_osd_op_w_latency_count{cluster=\"$cluster\"}[5m]) >= 0)",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -4148,7 +4433,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Avg OSD  Op  Latency",
       "tooltip": {
         "shared": true,
@@ -4157,24 +4444,33 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "ms",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -4182,9 +4478,13 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "decimals": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -4216,7 +4516,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 1,
       "points": false,
       "renderer": "flot",
@@ -4226,9 +4526,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg without (instance, ceph_daemon) (ceph_osd_apply_latency_ms)",
+          "expr": "avg without (instance, ceph_daemon) (ceph_osd_apply_latency_ms{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "apply",
           "metric": "ceph_osd_perf_apply_latency_seconds",
@@ -4236,9 +4536,9 @@
           "step": 4
         },
         {
-          "expr": "avg without (instance, ceph_daemon) (ceph_osd_commit_latency_ms)",
+          "expr": "avg without (instance, ceph_daemon) (ceph_osd_commit_latency_ms{cluster=\"$cluster\"})",
           "format": "time_series",
-          "interval": "$__interval",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "commit",
           "metric": "ceph_osd_perf_commit_latency_seconds",
@@ -4247,7 +4547,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "AVG OSD Apply + Commit Latency",
       "tooltip": {
         "shared": true,
@@ -4256,34 +4558,41 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "$$hashKey": "object:1258",
+          "decimals": null,
           "format": "ms",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:1259",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
       "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
-      },
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -4300,9 +4609,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -4333,7 +4645,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -4343,14 +4655,14 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "node_memory_Active_anon_bytes",
+          "expr": "node_memory_Active_anon_bytes{cluster=\"$cluster\"}",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{instance}}",
           "refId": "A"
         },
         {
-          "expr": "sum without (instance) (node_memory_Active_anon_bytes)",
+          "expr": "sum without (instance) (node_memory_Active_anon_bytes{cluster='$cluster'})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Cluster Memory Usage",
@@ -4358,7 +4670,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Node Memory Usage",
       "tooltip": {
         "shared": true,
@@ -4367,7 +4681,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -4375,18 +4691,25 @@
         {
           "$$hashKey": "object:2713",
           "format": "bytes",
+          "label": null,
           "logBase": 2,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:2714",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -4394,9 +4717,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -4427,7 +4753,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -4437,7 +4763,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg by (instance) (irate(node_cpu_seconds_total{mode!=\"idle\"}[$__interval])) * 100",
+          "expr": "avg by (instance) (irate(node_cpu_seconds_total{cluster='$cluster',mode!=\"idle\"}[$interval])) * 100",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -4446,7 +4772,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Node CPU Usage",
       "tooltip": {
         "shared": true,
@@ -4455,7 +4783,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -4463,18 +4793,25 @@
         {
           "$$hashKey": "object:2684",
           "format": "percent",
+          "label": null,
           "logBase": 2,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:2685",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -4482,9 +4819,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -4515,7 +4855,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -4525,7 +4865,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (instance)(irate(node_disk_read_bytes_total[$__interval]))",
+          "expr": "sum by (instance)(irate(node_disk_read_bytes_total{cluster='$cluster'}[$interval]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
@@ -4534,7 +4874,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Node Out",
       "tooltip": {
         "shared": true,
@@ -4543,7 +4885,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -4551,18 +4895,25 @@
         {
           "$$hashKey": "object:2742",
           "format": "decbytes",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:2743",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -4570,9 +4921,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -4603,7 +4957,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -4613,7 +4967,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (instance)(irate(node_disk_written_bytes_total[$__interval]))",
+          "expr": "sum by (instance)(irate(node_disk_written_bytes_total{cluster='$cluster'}[$interval]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{instance}}",
@@ -4621,7 +4975,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Node In",
       "tooltip": {
         "shared": true,
@@ -4630,7 +4986,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -4638,18 +4996,25 @@
         {
           "$$hashKey": "object:2771",
           "format": "decbytes",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:2772",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -4657,9 +5022,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+      "datasource": "PBFA97CFB590B2093",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
       },
       "fill": 1,
       "fillGradient": 0,
@@ -4690,7 +5058,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.3.0",
+      "pluginVersion": "7.2.0",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -4700,7 +5068,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "(node_filesystem_free_bytes{mountpoint='/', device != 'rootfs'})*100 / (node_filesystem_size_bytes{mountpoint='/', device != 'rootfs'})",
+          "expr": "(node_filesystem_free_bytes{cluster=\"$cluster\", mountpoint='/', device != 'rootfs'})*100 / (node_filesystem_size_bytes{cluster=\"$cluster\", mountpoint='/', device != 'rootfs'})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{{instance}}",
@@ -4708,7 +5076,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Free Space in root filesystem",
       "tooltip": {
         "shared": true,
@@ -4717,33 +5087,161 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
       "yaxes": [
         {
           "format": "percent",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 33,
+  "schemaVersion": 26,
   "style": "dark",
-  "tags": ["ceph", "cluster"],
+  "tags": [
+    "ceph",
+    "cluster"
+  ],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "auto": true,
+        "auto_count": 10,
+        "auto_min": "1m",
+        "current": {
+          "selected": false,
+          "text": "10s",
+          "value": "10s"
+        },
+        "datasource": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Interval",
+        "multi": false,
+        "name": "interval",
+        "options": [
+          {
+            "selected": false,
+            "text": "auto",
+            "value": "$__auto_interval_interval"
+          },
+          {
+            "selected": false,
+            "text": "5s",
+            "value": "5s"
+          },
+          {
+            "selected": true,
+            "text": "10s",
+            "value": "10s"
+          },
+          {
+            "selected": false,
+            "text": "30s",
+            "value": "30s"
+          },
+          {
+            "selected": false,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          }
+        ],
+        "query": "5s,10s,30s,1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      },
+      {
+        "allValue": "cephpolbo|cepherin|cephkelly",
+        "current": {},
+        "datasource": "PBFA97CFB590B2093",
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "cluster",
+        "multi": false,
+        "name": "cluster",
+        "options": [],
+        "query": "label_values(cluster)",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "time": {
     "from": "now-12h",
@@ -4762,11 +5260,20 @@
       "2h",
       "1d"
     ],
-    "time_options": ["5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"]
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
   },
   "timezone": "browser",
   "title": "Ceph - Cluster",
   "uid": "r6lloPJmz",
-  "version": 1,
-  "weekStart": ""
+  "version": 3
 }
