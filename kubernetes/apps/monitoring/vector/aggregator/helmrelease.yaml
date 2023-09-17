@@ -78,7 +78,6 @@ spec:
               {{`{{ kubernetes.pod_labels."app.kubernetes.io/name" }}`}}
             instance: >-
               {{`{{ kubernetes.pod_labels."app.kubernetes.io/instance" }}`}}
-             cluster: "home_ops"
         prometheus_sink:
           type: prometheus_exporter
           inputs:
