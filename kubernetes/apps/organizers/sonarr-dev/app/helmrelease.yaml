@@ -29,7 +29,7 @@ spec:
       replicas: 1
     image:
       repository: ghcr.io/bh2754/sonarr-develop
-      tag: 4.0.0.671@sha256:c49ff6f495ad644e23072c529a42cb28ccc42701ac174f78eba2ca0cbbb59db2
+      tag: 4.0.0.676@sha256:0b6ddbd0e56a744ec14025d59876ac89dfaf6321a8da4a5ab8443bf8500cbf1d
       pullPolicy: IfNotPresent
     env:
       TZ: "${TZ}"
