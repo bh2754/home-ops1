@@ -11,6 +11,7 @@ resources:
   - ./coredns.yaml
   - ./csi-driver-nfs.yaml
   - ./dandydeveloper-charts.yaml
+  - ./descheduler.yaml
   - ./external-dns.yaml
   - ./external-secrets.yaml
   - ./fairwinds.yaml
