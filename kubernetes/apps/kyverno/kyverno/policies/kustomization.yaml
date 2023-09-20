@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - ./remove-cpu-limits.yaml
   - ./sync-postgres-secret.yaml
+  - ./apply-ingress-auth-annotations.yaml
