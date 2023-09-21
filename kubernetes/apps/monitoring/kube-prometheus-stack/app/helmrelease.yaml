@@ -28,8 +28,8 @@ spec:
   uninstall:
     keepHistory: false
   dependsOn:
-    - name: local-path-provisioner
-      namespace: kube-system
+#   - name: local-path-provisioner
+#     namespace: kube-system
     - name: rook-ceph-cluster
       namespace: rook-ceph
   values:
@@ -53,7 +53,7 @@ spec:
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: local-path
+              storageClassName: ceph-block #local-path
               resources:
                 requests:
                   storage: 1Gi
@@ -156,7 +156,7 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: local-path
+              storageClassName: ceph-block #local-path
               resources:
                 requests:
                   storage: 20Gi
