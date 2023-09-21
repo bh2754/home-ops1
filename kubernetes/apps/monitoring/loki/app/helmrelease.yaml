@@ -129,7 +129,7 @@ spec:
     read:
       replicas: 2
       persistence:
-        storageClass: local-path
+        storageClass: ceph-block #local-path
       extraVolumeMounts:
         - name: rules
           mountPath: /rules
@@ -140,12 +140,12 @@ spec:
     write:
       replicas: 2
       persistence:
-        storageClass: local-path
+        storageClass: ceph-block #local-path
 
     backend:
       replicas: 2
       persistence:
-        storageClass: local-path
+        storageClass: ceph-block #local-path
       extraVolumeMounts:
         - name: rules
           mountPath: /rules/fake
