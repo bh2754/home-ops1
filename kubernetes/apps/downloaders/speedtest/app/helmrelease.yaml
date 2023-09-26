@@ -39,7 +39,7 @@ spec:
       requests:
         cpu: 10m
         memory: 53M
-      limits:
-        memory: 53M
+#     limits:
+#       memory: 53M
     podAnnotations:
       setGateway: "true"
