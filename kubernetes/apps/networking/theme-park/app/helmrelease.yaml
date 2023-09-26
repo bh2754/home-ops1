@@ -36,9 +36,9 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "external"
+        ingressClassName: "internal"
         annotations:
-          external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+#         external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
 #         cert-manager.io/cluster-issuer: "letsencrypt-production"
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
@@ -60,4 +60,4 @@ spec:
         cpu: 5m
         memory: 10Mi
       limits:
-        memory: 50Mi
+#       memory: 50Mi
