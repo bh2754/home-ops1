@@ -29,7 +29,7 @@ spec:
       setGateway: "true"
     image:
       repository: ghcr.io/bh2754/sabnzbd
-      tag: 4.0.3@sha256:6dd3c3eb4db6ead421a00332f8f8284e41788e4286d4d5d313eb25e0050e048c
+      tag: 4.1.0@sha256:8b17b530153e5df26cfcab45b6b709d8699a783c8f3574e9a64ad1df40f50462
       pullPolicy: IfNotPresent
     env:
       TZ: "${TZ}"
