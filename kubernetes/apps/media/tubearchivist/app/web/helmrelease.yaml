@@ -54,7 +54,7 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        ingressClassName: internal
         hosts:
           - host: *host
             paths:
@@ -78,7 +78,9 @@ spec:
     persistence:
       library:
         enabled: true
-        existingClaim: tubearchivist-nfs
+        type: nfs
+        server: "${NFS_SERVER}"
+        path: "/volume1/Media/TubeArchivist"
         mountPath: /youtube
     resources:
       requests:
