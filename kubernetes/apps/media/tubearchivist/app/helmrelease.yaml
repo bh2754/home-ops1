@@ -32,7 +32,7 @@ spec:
       repository: bbilly1/tubearchivist
       pullPolicy: IfNotPresent
       # -- Overrides the image tag whose default is the chart appVersion.
-      tag:
+      tag: latest
 
     global:
       # -- Set an override for the prefix of the fullname
