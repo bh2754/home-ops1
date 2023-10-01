@@ -6,8 +6,8 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: cluster-apps-cloudnative-pg
-    - name: cluster-apps-external-secrets-stores
+#   - name: cluster-apps-cloudnative-pg
+#   - name: cluster-apps-external-secrets-stores
     - name: cluster-apps-volsync
   path: ./kubernetes/apps/media/tubearchivist/app
   prune: true
