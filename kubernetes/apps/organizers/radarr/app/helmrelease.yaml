@@ -23,8 +23,8 @@ spec:
       retries: 5
   values:
     image:
-      repository: ghcr.io/bh2754/radarr-nightly
-      tag: 4.7.5.7821@sha256:d3717a5c44825487c5a2964f014b5b92021f38fd788ff45a1cc2b4c27ee416c1
+      repository: ghcr.io/bh2754/radarr-develop
+      tag: 5.0.3.8107@sha256:81949d78e49013fd9b2dea4516809245ece17df93cfd800e149c9c973d2b60f2
       pullPolicy: IfNotPresent
     env:
       TZ: "${TZ}"
