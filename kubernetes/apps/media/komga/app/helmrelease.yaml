@@ -24,8 +24,9 @@ spec:
 
   values:
 
-#   controller:
-#     type: statefulset
+    controller:
+      type: deployment
+
 
     image:
       repository: ghcr.io/cbc02009/komga
