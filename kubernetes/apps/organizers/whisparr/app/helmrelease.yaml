@@ -26,25 +26,27 @@ spec:
   values:
     controller:
       replicas: 1
-    addons:
-      netshoot:
-        enabled: false
-    env:
-      UMASK: ""
-      TZ: ${TZ}
-    envFrom:
-      - secretRef:
-          name: whisparr-secret
-    image:
-      pullPolicy: IfNotPresent
-      repository: ghcr.io/bh2754/whisparr
-      tag: 0.1.0.53
-    podSecurityContext:
-      runAsGroup: 0
-      runAsUser: 0
-    securityContext:
-      readOnlyRootFilesystem: false
-      runAsNonRoot: false
+    controllers:
+      main:
+        containers:
+          main:
+            env:
+              UMASK: ""
+              TZ: ${TZ}
+            envFrom:
+              - secretRef:
+                  name: whisparr-secret
+            image:
+              pullPolicy: IfNotPresent
+              repository: ghcr.io/bh2754/whisparr
+              tag: 0.1.0.53
+    defaultPodOptions:
+      podSecurityContext:
+        runAsGroup: 0
+        runAsUser: 0
+#       securityContext:
+#         readOnlyRootFilesystem: false
+#         runAsNonRoot: false
     service:
       main:
         ports:
