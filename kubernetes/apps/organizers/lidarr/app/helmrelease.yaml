@@ -34,7 +34,7 @@ spec:
             runAsGroup: 568
             fsGroup: 568
             fsGroupChangePolicy: OnRootMismatch
-        strategy: recreate
+#       strategy: recreate
         containers:
           main:
             image:
