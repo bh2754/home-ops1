@@ -70,8 +70,8 @@ spec:
               ephemeral-storage: "4Gi"
               memory: 264M
 
-          netshoot:
-            enabled: true
+#         netshoot:
+#           enabled: true
 
     service:
       main:
