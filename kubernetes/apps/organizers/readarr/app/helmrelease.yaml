@@ -24,7 +24,7 @@ spec:
   values:
     image:
       repository: ghcr.io/bh2754/readarr-nightly
-      tag: 0.3.7.2257@sha256:571a56f8240e965fb26284fb0f30e60032674f041018d9f8614747bae154d3ed
+      tag: 0.3.7.2260@sha256:7520677b7643097a8090ee8fe5fb1449d1307ff4966a21354bfce7b07e19edbe
       pullPolicy: IfNotPresent
     env:
       TZ: "${TZ}"
