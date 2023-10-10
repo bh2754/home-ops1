@@ -12,4 +12,4 @@ resources:
    - ./readarr/ks.yaml
 # - ./sonarr/ks.yaml
    - ./sonarr-dev/ks.yaml
-   - ./whisparr/ks.yaml
+#  - ./whisparr/ks.yaml
