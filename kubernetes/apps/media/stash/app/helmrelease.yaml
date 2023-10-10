@@ -26,7 +26,7 @@ spec:
       # -- image repository
       repository: stashapp/stash
       # -- image tag
-      tag: latest@sha256:579704bd67397325164b9364d9ebb48a147d2ddf11128a4f567237ff41f84a93
+      tag: latest@sha256:50c1327bb4434c192bf6797f8bbd3aa090071b557826c95a8461705dfe5f04c1
       # -- image pull policy
       pullPolicy: IfNotPresent
 
