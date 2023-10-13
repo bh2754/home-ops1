@@ -34,7 +34,7 @@ spec:
         reloader.stakater.com/auto: "true"
     image:
       repository: ghcr.io/bh2754/prowlarr-nightly
-      tag: 1.9.4.4019@sha256:c84c8229b8130d850fd7084a9c100981bf6e4c5c78e215e125fcdcda731352f1
+      tag: 1.9.4.4029@sha256:0c3f94c248a8211486216288c6dcb99a2427f1655beed2b79db48fe0a1b5f5b0
       pullPolicy: IfNotPresent
     env:
       TZ: "${TIMEZONE}"
