@@ -10,10 +10,10 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.0.3
       sourceRef:
         kind: HelmRepository
-        name: bjw-s-charts
+        name: bjw-s
         namespace: flux-system
   maxHistory: 3
   install:
@@ -26,72 +26,82 @@ spec:
       retries: 3
   uninstall:
     keepHistory: false
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+    - name: volsync
+      namespace: volsync
   values:
-    initContainers:
-      init-db:
-        image: ghcr.io/bh2754/postgres-initdb:14.9
-        envFrom:
-          - secretRef:
-              name: home-assistant-secret
-    controller:
-      type: deployment
-      annotations:
-        reloader.stakater.com/auto: "true"
-    image:
-      repository: ghcr.io/bh2754/home-assistant
-      tag: 2023.7.1@sha256:1f4b32333423eec6e136ee0cf14f17c516b99a41c9405df306e2c484bf961391
-    env:
-      TZ: ${TZ}
-      POSTGRES_HOST: postgres-rw.databases.svc.cluster.local
-      POSTGRES_DB: home_assistant
-    envFrom:
-      - secretRef:
-          name: home-assistant-secret
+    controllers:
+      main:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/bh2754/postgres-init
+              tag: 14.9
+              pullPolicy: IfNotPresent
+            env:
+              TZ: ${TZ}
+              POSTGRES_HOST: postgres-rw.databases.svc.cluster.local
+              POSTGRES_DB: home_assistant
+            envFrom:
+              - secretRef:
+                  name: home-assistant-secret
+        containers:
+          main:
+            image:
+              repository: ghcr.io/bh2754/home-assistant
+              tag: 2023.7.1@sha256:1f4b32333423eec6e136ee0cf14f17c516b99a41c9405df306e2c484bf961391
+            env:
+              TZ: ${TZ}
+              POSTGRES_HOST: postgres-rw.databases.svc.cluster.local
+              POSTGRES_DB: home_assistant
+            envFrom:
+              - secretRef:
+                  name: home-assistant-secret
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 1Gi
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
     service:
       main:
-        type: LoadBalancer
-        externalIPs: ["${METALLB_HOME_ASSISTANT_ADDR}"]
-        externalTrafficPolicy: Local
         ports:
           http:
             port: 8123
     ingress:
       main:
         enabled: true
-        ingressClassName: nginx
+        className: external
         annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
-          hajimari.io/icon: mdi:home-assistant
+          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
         hosts:
           - host: &host hass.${SECRET_DOMAIN}
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
-            secretName: "hass-tls"
-    probes:
-      liveness:
-        enabled: false
-      readiness:
-        enabled: false
-      startup:
-        enabled: false
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
-      supplementalGroups:
-        - 100
     persistence:
       config:
         enabled: true
         existingClaim: home-assistant-config-v1
-    resources:
-      requests:
-        cpu: 10m
-        memory: 100Mi
-      limits:
-        memory: 750Mi
