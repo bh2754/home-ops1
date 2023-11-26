@@ -18,7 +18,7 @@ spec:
   values:
     initContainers:
       init-db:
-        image: ghcr.io/bh2754/postgres-initdb:14.9
+        image: ghcr.io/bh2754/postgres-initdb:14.10
         envFrom:
           - secretRef:
               name: authelia-secret
