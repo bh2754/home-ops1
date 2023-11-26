@@ -35,7 +35,7 @@ spec:
     copyMethod: Snapshot
     pruneIntervalDays: 10
     repository: tdarr-config-restic-secret
-    cacheCapacity: 10Gi
+    cacheCapacity: 20Gi
     volumeSnapshotClassName: csi-ceph-blockpool
     storageClassName: ceph-block
     cacheStorageClassName: ceph-block

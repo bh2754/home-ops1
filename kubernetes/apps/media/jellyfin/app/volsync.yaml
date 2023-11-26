@@ -33,6 +33,7 @@ spec:
     schedule: "0 */12 * * *"
   restic:
     copyMethod: Snapshot
+    cacheCapacity: 10Gi
     pruneIntervalDays: 14
     repository: jellyfin-restic-secret
     retain:
