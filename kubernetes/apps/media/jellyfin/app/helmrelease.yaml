@@ -18,7 +18,7 @@ spec:
   values:
     image:
       repository: ghcr.io/bh2754/jellyfin
-      tag: 10.8.12@sha256:111648db7b24be5f999097883c5067b479a9aec8b7855634d3f4410832c2f11c
+      tag: 10.8.13@sha256:89649619cd8f26ba8273e143c97917cc455446e75cb852f9190705e7a500a6d7
 
     podSecurityContext:
       runAsUser: 568
