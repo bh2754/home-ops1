@@ -8,13 +8,18 @@ metadata:
     kyverno.io/ignore: "true"
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:14.6
+  imageName: ghcr.io/cloudnative-pg/postgresql:16.1.4
   primaryUpdateStrategy: unsupervised
   storage:
     size: 50Gi
     storageClass: ceph-block
   superuserSecret:
-    name: postgres-superuser
+    name: cloudnative-pg-secret
+  enableSuperuserAccess: true
+  # Note: Bootstrap is needed when recovering from an existing cnpg cluster
+  # bootstrap:
+  #   recovery:
+  #     source: &previousCluster postgres1-v1
   monitoring:
     enablePodMonitor: true
   backup:
@@ -28,23 +33,24 @@ spec:
       serverName: postgres-v1
       s3Credentials:
         accessKeyId:
-          name: postgres-minio
-          key: MINIO_ACCESS_KEY
+          name: cloudnative-pg-secret
+          key: aws-access-key-id
         secretAccessKey:
-          name: postgres-minio
-          key: MINIO_SECRET_KEY
-  externalClusters:
-    - name: postgres-v1
-      barmanObjectStore:
-        wal:
-          compression: bzip2
-          maxParallel: 8
-        destinationPath: s3://postgresql/
-        endpointURL: http://minio.bharris.co:9001
-        s3Credentials:
-          accessKeyId:
-            name: postgres-minio
-            key: MINIO_ACCESS_KEY
-          secretAccessKey:
-            name: postgres-minio
-            key: MINIO_SECRET_KEY
+          name: cloudnative-pg-secret
+          key: aws-secret-access-key
+  # # Note: externalClusters is needed when recovering from an existing cnpg cluster
+  # externalClusters:
+  #   - name: *previousCluster
+  #     barmanObjectStore:
+  #       wal:
+  #         compression: bzip2
+  #         maxParallel: 8
+  #       destinationPath: s3://postg/
+  #       endpointURL: http://minio.bharris.co:9001
+  #       s3Credentials:
+  #         accessKeyId:
+  #           name: postgres-minio
+  #           key: aws-access-key-id
+  #         secretAccessKey:
+  #           name: postgres-minio
+  #           key: aws-secret-access-key
