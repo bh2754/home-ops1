@@ -24,7 +24,7 @@ spec:
   values:
     image:
       repository: ghcr.io/bh2754/radarr-develop
-      tag: 5.2.3.8303@sha256:a143ea44ce2dd787d01195c0788d7d4e2e3876f6d7f2833f50a32a700dedb4df
+      tag: 5.2.4.8328@sha256:90370dc11dbc7c11354dbe2369e79f33e134add287bc195c77b386cfdf022065
       pullPolicy: IfNotPresent
     env:
       TZ: "${TZ}"
