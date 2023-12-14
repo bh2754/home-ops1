@@ -66,6 +66,8 @@ spec:
                 cpu: 10m
                 memory: 249M
         pod:
+          annotations:
+            setGateway: "true"
           securityContext:
             runAsUser: 568
             runAsGroup: 568
