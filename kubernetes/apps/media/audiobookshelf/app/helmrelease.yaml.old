@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.0.3
+      version: 1.5.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -21,39 +21,17 @@ spec:
   upgrade:
     remediation:
       retries: 5
-  dependsOn:
-    - name: onepassword-connect
-      namespace: external-secrets
-    - name: nginx-external
-      namespace: networking
-    - name: authelia
-      namespace: security
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-
   values:
-    controllers:
-      main:
-        pod:
-          annotations:
-            setGateway: "true"
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 568
-            fsGroup: 568
-            fsGroupChangePolicy: "OnRootMismatch"
-        containers:
-          main:
-            image:
-              repository: ghcr.io/advplyr/audiobookshelf
-              tag: 2.5.0
-              pullPolicy: IfNotPresent
-            env:
-              TZ: ${TIMEZONE}
-              AUDIOBOOKSHELF_UID: 568
-              AUDIOBOOKSHELF_GID: 568
-              CONFIG_PATH: /config
-              METADATA_PATH: /config/metadata
+    image:
+      repository: ghcr.io/advplyr/audiobookshelf
+      tag: 2.6.0
+      pullPolicy: IfNotPresent
+    env:
+      TZ: ${TIMEZONE}
+      AUDIOBOOKSHELF_UID: 568
+      AUDIOBOOKSHELF_GID: 568
+      CONFIG_PATH: /config
+      METADATA_PATH: /config/metadata
     service:
       main:
         ports:
@@ -62,12 +40,12 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "external"
+        ingressClassName: "external"
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           nginx.ingress.kubernetes.io/auth-method: GET
           nginx.ingress.kubernetes.io/auth-url: http://authelia.security.svc.cluster.local/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.bharris.xyz?rm=$request_method
+          nginx.ingress.kubernetes.io/auth-signin: https://auth.bharris.vip?rm=$request_method
           nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
           nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
           hajimari.io/enable: "true"
@@ -76,12 +54,15 @@ spec:
           - host: &host "abs.${SECRET_DOMAIN}"
             paths:
               - path: /
-                service:
-                  name: main
-                  port: http
+                pathType: Prefix
         tls:
           - hosts:
               - *host
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
     persistence:
       config:
         enabled: true
