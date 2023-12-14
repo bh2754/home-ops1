@@ -53,7 +53,7 @@ spec:
           main:
             image:
               repository: ghcr.io/bh2754/home-assistant
-              tag: 2023.12.1@sha256:c5ca61fe580958a29e44b7114cbe8dbb230fc88f5052c69d7dc6db9e3bbc4651
+              tag: 2023.12.2@sha256:a20a9f474880cc0961800acdb46e1025be100d5e0e3302b5722f381b616f3f91
             env:
               TZ: ${TZ}
               POSTGRES_HOST: postgres-rw.databases.svc.cluster.local
