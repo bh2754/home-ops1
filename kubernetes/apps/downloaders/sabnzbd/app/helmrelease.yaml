@@ -21,6 +21,15 @@ spec:
   upgrade:
     remediation:
       retries: 5
+  dependsOn:
+    - name: onepassword-connect
+      namespace: external-secrets
+    - name: nginx-external
+      namespace: networking
+    - name: authelia
+      namespace: security
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
     controllers:
       main:
@@ -42,7 +51,12 @@ spec:
                 sabnzbd.default.svc.cluster,
                 sabnzbd.default.svc.cluster.local,
                 sabnzbd.${SECRET_DOMAIN}
-
+          netshoot:
+            image:
+              repository: ghcr.io/nicolaka/netshoot
+              tag: v0.11
+            command: ["/bin/bash"]
+            args: ["-c", "while true; do ping localhost; sleep 60;done"]
             envFrom:
               - secretRef:
                   name: sabnzbd-secret
