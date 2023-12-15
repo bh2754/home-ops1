@@ -47,7 +47,7 @@ spec:
                   name: readarr-secret
         pod:
           annotations:
-            setGateway: "true"
+            setGateway: "false"
           securityContext:
             runAsUser: 568
             runAsGroup: 568   # was 568 before app template upgrade
