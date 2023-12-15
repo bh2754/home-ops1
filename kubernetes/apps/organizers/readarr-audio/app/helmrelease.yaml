@@ -98,7 +98,7 @@ spec:
              sub_filter_once on;
 
         hosts:
-          - host: &host "abs.${SECRET_DOMAIN}"
+          - host: &host "audio.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
