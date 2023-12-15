@@ -56,8 +56,8 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/bh2754/readarr-develop
-              tag: 0@sha256:e17b113db74570c9ed32e171aa4b1a1fcdd17310c7c4f0d422898403c21d10f2
+              repository: ghcr.io/onedr0p/readarr-develop
+              tag: 0.3.10.2287@sha256:ff5f0db30fd5e0461a43a5b97556bea46e1f6f84b9c6d94028f636a14a158c24
             env:
               READARR__INSTANCE_NAME: Readarr
               READARR__PORT: &port 80
