@@ -55,7 +55,7 @@ spec:
               READARR__PORT: &port 80
 #             READARR__AUTHENTICATION_METHOD: External
 #             READARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
-#             READARR__APPLICATION_URL: "https://readarr.${SECRET_DOMAIN}"
+#             READARR__APPLICATION_URL: "https://audio.${SECRET_DOMAIN}"
               READARR__LOG_LEVEL: info
             envFrom:
               - secretRef:
