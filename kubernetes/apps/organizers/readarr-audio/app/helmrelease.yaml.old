@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.3.0
+      version: 1.5.1
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -21,58 +21,19 @@ spec:
   upgrade:
     remediation:
       retries: 5
-  dependsOn:
-    - name: onepassword-connect
-      namespace: external-secrets
-    - name: nginx-external
-      namespace: networking
-    - name: authelia
-      namespace: security
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   values:
-    controllers:
-      main:
-        type: deployment
-        annotations:
-          reloader.stakater.com/auto: "true"
-
-        pod:
-          annotations:
-            setGateway: "true"
-          securityContext:
-            runAsUser: 568
-            runAsGroup: 100   # was 568 before app template upgrade
-            fsGroup: 100
-            fsGroupChangePolicy: "OnRootMismatch"
-        containers:
-          main:
-            image:
-              repository: ghcr.io/bh2754/readarr-nightly
-              tag: 0.3.10.2287@sha256:3fad182ea5d9cb537d947e6f0bf1b49194771c0c76ad9b7ff744f3836a7e17a3
-            env:
-              READARR__INSTANCE_NAME: READARR-AUDIO
-              READARR__PORT: &port 80
-#             READARR__AUTHENTICATION_METHOD: External
-#             READARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
-#             READARR__APPLICATION_URL: "https://readarr.${SECRET_DOMAIN}"
-              READARR__LOG_LEVEL: info
-            envFrom:
-              - secretRef:
-                  name: readarr-audio-secret
-            resources:
-              requests:
-                cpu: 20m
-                memory: 323M
-              limits:
-                memory: 323M
-          netshoot:
-            image:
-              repository: ghcr.io/nicolaka/netshoot
-              tag: v0.11
-            command: ["/bin/bash"]
-            args: ["-c", "while true; do ping localhost; sleep 60;done"]
-
+    image:
+      repository: ghcr.io/bh2754/readarr-nightly
+      tag: 0.3.12.2324@sha256:8c95566f79b83206719c4aa940106cd5416fb66b59024263700dd479395f7bfd
+      pullPolicy: IfNotPresent
+    env:
+      TZ: "${TZ}"
+      READARR__INSTANCE_NAME: Readarr
+      READARR__PORT: &port 80
+      READARR__LOG_LEVEL: info
+    envFrom:
+      - secretRef:
+          name: readarr-audio-secret
     service:
       main:
         ports:
@@ -82,7 +43,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "internal"
+        ingressClassName: "external"
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           nginx.ingress.kubernetes.io/auth-method: GET
@@ -96,17 +57,21 @@ spec:
             proxy_set_header Accept-Encoding "";
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/readarr/hotline.css"></head>';
              sub_filter_once on;
-
         hosts:
-          - host: &host "abs.${SECRET_DOMAIN}"
+          - host: &host "audio.${SECRET_DOMAIN}"
             paths:
               - path: /
-                service:
-                  name: main
-                  port: http
+                pathType: Prefix
         tls:
           - hosts:
               - *host
+    podSecurityContext:
+      runAsUser: 568
+      runAsGroup: 568
+      fsGroup: 568
+      fsGroupChangePolicy: "OnRootMismatch"
+      supplementalGroups:
+        - 100
 
     persistence:
       config:
@@ -124,3 +89,13 @@ spec:
         server: *nas
         path: ${NFS_DOWNLOAD}
         mountPath: /downloads
+    podAnnotations:
+      setGateway: "true"
+    resources:
+      requests:
+        cpu: 10m
+        memory: 512M
+        ephemeral-storage: "2Gi"
+      limits:
+        memory: 1904M
+        ephemeral-storage: "4Gi"
