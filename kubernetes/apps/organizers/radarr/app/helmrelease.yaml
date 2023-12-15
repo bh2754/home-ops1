@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.3.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -21,31 +21,68 @@ spec:
   upgrade:
     remediation:
       retries: 5
+  dependsOn:
+    - name: onepassword-connect
+      namespace: external-secrets
+    - name: nginx-external
+      namespace: networking
+    - name: authelia
+      namespace: security
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
-    image:
-      repository: ghcr.io/bh2754/radarr-develop
-      tag: 5.2.4.8328@sha256:90370dc11dbc7c11354dbe2369e79f33e134add287bc195c77b386cfdf022065
-      pullPolicy: IfNotPresent
-    env:
-      TZ: "${TZ}"
-      RADARR__INSTANCE_NAME: Radarr
-      RADARR__PORT: &port 7878
-      RADARR__APPLICATION_URL: "https://radarr.${SECRET_DOMAIN}"
-      RADARR__LOG_LEVEL: info
-      RADARR__AUTHENTICATION_METHOD: External
-      RADARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
-    envFrom:
-      - secretRef:
-          name: radarr-secret
+    controllers:
+      main:
+        type: deployment
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          annotations:
+            setGateway: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 100   # was 568 before app template upgrade
+            fsGroup: 100
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/bh2754/radarr-develop
+              tag: 5.2.3.8303@sha256:a143ea44ce2dd787d01195c0788d7d4e2e3876f6d7f2833f50a32a700dedb4df
+            env:
+              SONARR__INSTANCE_NAME: Radarr
+              SONARR__PORT: &port 7878
+              SONARR__AUTHENTICATION_METHOD: External
+              SONARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
+              SONARR__APPLICATION_URL: "https://radarr.${SECRET_DOMAIN}"
+              SONARR__LOG_LEVEL: info
+            envFrom:
+              - secretRef:
+                  name: radarr-secret
+            resources:
+              requests:
+                cpu: 20m
+                memory: 323M
+              limits:
+                memory: 323M
+          netshoot:
+            image:
+              repository: ghcr.io/nicolaka/netshoot
+              tag: v0.11
+            command: ["/bin/bash"]
+            args: ["-c", "while true; do ping localhost; sleep 60;done"]
+
     service:
       main:
         ports:
           http:
-            port: 7878
+            port: *port
+
     ingress:
       main:
         enabled: true
-        ingressClassName: external
+        className: "internal"
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           nginx.ingress.kubernetes.io/auth-method: GET
@@ -59,46 +96,18 @@ spec:
              sub_filter_once on;
           hajimari.io/enable: "true"
           hajimari.io/icon: "filmstrip"
+
         hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+          - host: &host "radarr.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
-      api:
-        enabled: true
-        ingressClassName: "internal"
-#       annotations:
-#         auth.home.arpa/enabled: "true"
-        hosts:
-          - host: *host
-            paths:
-              - path: /api
-                pathType: Prefix
-        tls:
-          - hosts:
-              - *host
-    probes:
-      liveness:
-        enabled: true
-        custom: true
-        spec:
-          exec:
-            command:
-              - /usr/bin/env
-              - bash
-              - -c
-              - curl --fail localhost:7878/api/v3/system/status?apiKey=`IFS=\> && while
-                read -d \< E C; do if [[ $E = "ApiKey" ]]; then echo $C; fi; done < /config/config.xml`
-          failureThreshold: 5
-          initialDelaySeconds: 60
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 10
-    podAnnotations:
-      setGateway: "true"
+
     persistence:
       config:
         enabled: true
@@ -107,53 +116,13 @@ spec:
         enabled: true
         type: nfs
         server: "${NFS_SERVER}"
-        path: ${NFS_MEDIA}
+        path: "${NFS_MEDIA}"
         mountPath: /media
         readOnly: false
       download:
         enabled: true
         type: nfs
         server: "${NFS_SERVER}"
-        path: ${NFS_DOWNLOAD}
+        path: "${NFS_DOWNLOAD}"
         mountPath: /download
         readOnly: false
-
-    podSecurityContext:
-      supplementalGroups:
-        - 1001
-        - 100
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: OnRootMismatch
-    metrics:
-      # -- Enable and configure Exportarr sidecar and Prometheus serviceMonitor.
-      # @default -- See values.yaml
-      enabled: true
-      serviceMonitor:
-        interval: 3m
-        scrapeTimeout: 1m
-        labels: {}
-      # -- Enable and configure Prometheus Rules for the chart under this key.
-      # @default -- See values.yaml
-      prometheusRule:
-        enabled: true
-        rules:
-          - alert: SonarrDown
-            annotations:
-              description: Sonarr service is down.
-              summary: Sonarr is down.
-            expr: |
-              sonarr_system_status == 0
-            for: 5m
-            labels:
-              severity: critical
-
-    resources:
-      requests:
-        cpu: 10m
-        memory: 1283M
-        ephemeral-storage: "2Gi"
-      limits:
-        memory: 1800M
-        ephemeral-storage: "4Gi"
