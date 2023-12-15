@@ -36,14 +36,13 @@ spec:
         type: deployment
         annotations:
           reloader.stakater.com/auto: "true"
-
         pod:
           annotations:
             setGateway: "true"
           securityContext:
             runAsUser: 568
-            runAsGroup: 100   # was 568 before app template upgrade
-            fsGroup: 100
+            runAsGroup: 568   # was 568 before app template upgrade
+            fsGroup: 568
             fsGroupChangePolicy: "OnRootMismatch"
         containers:
           main:
@@ -53,7 +52,7 @@ spec:
             env:
               READARR__INSTANCE_NAME: Readarr
               READARR__PORT: &port 80
-#             READARR__AUTHENTICATION_METHOD: External
+              READARR__AUTHENTICATION_METHOD: External
 #             READARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
 #             READARR__APPLICATION_URL: "https://readarr.${SECRET_DOMAIN}"
               READARR__LOG_LEVEL: info
@@ -82,14 +81,14 @@ spec:
     ingress:
       main:
         enabled: true
-        className: "external"
+        className: "internal"
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
-          nginx.ingress.kubernetes.io/auth-method: GET
-          nginx.ingress.kubernetes.io/auth-url: http://authelia.security.svc.cluster.local/api/verify
-          nginx.ingress.kubernetes.io/auth-signin: https://auth.bharris.vip?rm=$request_method
-          nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
-          nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
+#         nginx.ingress.kubernetes.io/auth-method: GET
+#         nginx.ingress.kubernetes.io/auth-url: http://authelia.security.svc.cluster.local/api/verify
+#         nginx.ingress.kubernetes.io/auth-signin: https://auth.bharris.vip?rm=$request_method
+#         nginx.ingress.kubernetes.io/auth-response-headers: Remote-User,Remote-Name,Remote-Groups,Remote-Email
+#         nginx.ingress.kubernetes.io/auth-snippet: proxy_set_header X-Forwarded-Method $request_method;
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header Accept-Encoding "";
             sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/readarr/hotline.css"></head>';
