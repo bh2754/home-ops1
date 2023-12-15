@@ -2,18 +2,20 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: &app sonarr
+  name: &app lidarr
   namespace: organizers
 spec:
-  interval: 15m
+  interval: 5m
   chart:
     spec:
+      # renovate: registryUrl=https://k8s-at-home.com/charts/
       chart: app-template
       version: 2.3.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+      interval: 1m
   install:
     createNamespace: true
     remediation:
@@ -34,13 +36,13 @@ spec:
     controllers:
       main:
         type: deployment
+        strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
-
         pod:
           annotations:
             setGateway: "true"
-          securityContext:
+          securityContect:
             runAsUser: 568
             runAsGroup: 100   # was 568 before app template upgrade
             fsGroup: 100
@@ -48,37 +50,46 @@ spec:
         containers:
           main:
             image:
-              repository: ghcr.io/onedr0p/sonarr-develop
-              tag: 4.0.0.733@sha256:7f1496845bc0bf1d46b37b1013bb2a4b7af79e13b2a12dbc882d456bc869ca39
+              repository: ghcr.io/bh2754/lidarr-nightly
+              tag: 1.5.1.3665@sha256:872c1149f1c24d4509ec2b146f23ebe40cfbb94adebcabe63147f7bf642f8929
+              pullPolicy: IfNotPresent
             env:
-              SONARR__INSTANCE_NAME: Sonarr
-              SONARR__PORT: &port 8989
-              SONARR__AUTHENTICATION_METHOD: External
-              SONARR__AUTHENTICATION_REQUIRED: DisabledForLocalAddresses
-              SONARR__APPLICATION_URL: "https://sonarr.${SECRET_DOMAIN}"
-              SONARR__LOG_LEVEL: info
+              TZ: ${TZ}
+              LIDARR__INSTANCE_NAME: Lidarr
+              LIDARR__PORT: &port 8686
+              LIDARR__LOG_LEVEL: info
             envFrom:
               - secretRef:
-                  name: sonarr-secret
+                  name: lidarr-secret
             resources:
               requests:
-                cpu: 20m
-                memory: 323M
+                cpu: 10m
+                memory: 1102M
+                ephemeral-storage: "2Gi"
               limits:
-                memory: 323M
-          netshoot:
-            image:
-              repository: ghcr.io/nicolaka/netshoot
-              tag: v0.11
-            command: ["/bin/bash"]
-            args: ["-c", "while true; do ping localhost; sleep 60;done"]
-
+                memory: 1428M
+                ephemeral-storage: "4Gi"
     service:
       main:
         ports:
           http:
             port: *port
-
+    metrics:
+      enabled: false
+    persistence:
+      config:
+        enabled: true
+        existingClaim: lidarr-config-v1
+      media:
+        enabled: true
+        type: nfs
+        server: ${NFS_SERVER}
+        path: ${NFS_MUSIC}
+      downloads:
+        enabled: true
+        type: nfs
+        server: ${NFS_SERVER}
+        path: /volume1/Download
     ingress:
       main:
         enabled: true
@@ -95,29 +106,20 @@ spec:
            sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/lidarr/hotline.css"></head>';
             sub_filter_once on;
         hosts:
-          - host: &host "sonarr.${SECRET_DOMAIN}"
+          - host: &host "lidarr.${SECRET_DOMAIN}"
             paths:
               - path: /
                 service:
                   name: main
-                  port: http
+                  prot: http
         tls:
           - hosts:
               - *host
-
-    persistence:
-      config:
-        enabled: true
-        existingClaim: sonarr-config-v1
-      media:
-        enabled: true
-        type: nfs
-        server: "${NFS_SERVER}"
-        path: "${NFS_MEDIA}"
-        mountPath: /media
-      download:
-        enabled: true
-        type: nfs
-        server: "${NFS_SERVER}"
-        path: "${NFS_DOWNLOAD}"
-        mountPath: /download
+    resources:
+      requests:
+        cpu: 10m
+        memory: 1102M
+        ephemeral-storage: "2Gi"
+      limits:
+        memory: 1428M
+        ephemeral-storage: "4Gi"
