@@ -139,6 +139,7 @@ tasks:
     cmds:
       - flux -n {{.namespace}} resume helmrelease {{.rsrc}}
       - flux -n flux-system resume kustomization {{.kustomization}}
+      - kubectl -n {{.namespace}} scale {{.controller}} --replicas 1
     env: *task-vars
 
   unlock:
