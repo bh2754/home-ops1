@@ -14,46 +14,81 @@ spec:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
-  interval: 30m
+  interval: 15m
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  dependsOn:
+    - name: onepassword-connect
+      namespace: external-secrets
+    - name: nginx-external
+      namespace: networking
+    - name: authelia
+      namespace: security
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
-    image:
-      repository: ghcr.io/bh2754/jellyfin
-      tag: 10.8.13@sha256:89649619cd8f26ba8273e143c97917cc455446e75cb852f9190705e7a500a6d7
+    controllers:
+      main:
+        type: deployment
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          annotations:
+            setGateway: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568   # was 568 before app template upgrade
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+            supplementalGroups:
+              - 44
+              - 109
+              - 65539
 
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
-      supplementalGroups:
-        - 44
-        - 109
-        - 65539
-
-    env:
-      DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/bh2754/jellyfin
+              tag: 10.8.13@sha256:89649619cd8f26ba8273e143c97917cc455446e75cb852f9190705e7a500a6d7
+            env:
+              DOTNET_SYSTEM_IO_DISABLEFILELOCKING: "true"
+              JELLYFIN_FFmpeg__probesize: 50000000
+              JELLYFIN_FFmpeg__analyzeduration: 50000000
+              JELLYFIN_PublishedServerUrl: &loadBalancerIP 10.0.111.75
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1471M
+              limits:
+                memory: 12G
 
     service:
       main:
         type: LoadBalancer
-        externalTrafficPolicy: Local
-        loadBalancerIP: "${METTALB_JELLYFIN}"
+        annotations:
+          io.cilium/lb-ipam-ips: *loadBalancerIP
         ports:
           http:
-            port: 8096
+            port: *port
 
     ingress:
       main:
         enabled: true
-        ingressClassName: internal
+        className: internal
         annotations:
           nginx.ingress.kubernetes.io/whitelist-source-range: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
         hosts:
           - host: &host jellyfin.${SECRET_DOMAIN}
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
@@ -71,10 +106,5 @@ spec:
       transcode:
         enabled: true
         type: emptyDir
-
-    resources:
-      requests:
-        cpu: 100m
-        memory: 1471M
-      limits:
-        memory: 12G
+        globalMounts:
+          - path: /transcode
