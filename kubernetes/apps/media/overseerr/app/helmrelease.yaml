@@ -39,8 +39,6 @@ spec:
         reloader.stakater.com/auto: "true"
 
       pod:
-        annotations:
-          setGateway: "true"
         securityContext:
           runAsUser: 568
           runAsGroup: 568
@@ -60,30 +58,30 @@ spec:
               memory: 226M
             limits:
               memory: 1937M
-  service:
-    main:
-      ports:
-        http:
-          port: *port
-  ingress:
-    main:
-      enabled: true
-      className: "internal"
-      annotations:
-        hajimari.io/enable: "true"
-        hajimari.io/icon: mdi:eye-circle
-      hosts:
-        - host: &host "overseerr.${SECRET_DOMAIN}"
-          paths:
-            - path: /
-              service:
-                name: main
-                port: http
-      tls:
-        - hosts:
-            - *host
-  persistence:
-    config:
-      enabled: true
-      existingClaim: overseerr-config-v1
-      mountPath: /app/config
+    service:
+      main:
+        ports:
+          http:
+            port: *port
+    ingress:
+      main:
+        enabled: true
+        className: "internal"
+        annotations:
+          hajimari.io/enable: "true"
+          hajimari.io/icon: mdi:eye-circle
+        hosts:
+          - host: &host "overseerr.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  name: main
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        enabled: true
+        existingClaim: overseerr-config-v1
+        mountPath: /app/config
