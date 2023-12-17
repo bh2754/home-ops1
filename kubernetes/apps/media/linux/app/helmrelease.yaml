@@ -1,7 +1,7 @@
 # Alternatively: https://hub.docker.com/r/linuxserver/rdesktop
 # Also: https://hub.docker.com/r/linuxserver/blender
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: linux
