@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.3.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -22,13 +22,44 @@ spec:
   upgrade:
     remediation:
       retries: 5
+  dependsOn:
+    - name: onepassword-connect
+      namespace: external-secrets
+    - name: nginx-external
+      namespace: networking
+    - name: authelia
+      namespace: security
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
-    global:
-      nameOverride: *app
-    image:
-      repository: lscr.io/linuxserver/ombi
-      tag: 4.43.5
-      pullPolicy: IfNotPresent
+    controllers:
+      main:
+        type: deployment
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          annotations:
+            setGateway: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          main:
+            image:
+              repository: lscr.io/linuxserver/ombi
+              tag: 4.43.5
+              pullPolicy: IfNotPresent
+            env:
+              PUID: "1000"
+              PGID: "1000"
+            resources:
+              requests:
+                cpu: 15m
+                memory: 226M
+              limits:
+                memory: 292M
     service:
       main:
         ports:
@@ -37,34 +68,23 @@ spec:
     ingress:
       main:
         enabled: true
-        ingressClassName: "internal"
+        className: "internal"
         annotations:
           hajimari.io/enable: "true"
           hajimari.io/icon: "movie-search"
-#        cert-manager.io/cluster-issuer: "letsencrypt-production"
         hosts:
           - host: &host "ombi.${SECRET_DOMAIN}"
             paths:
               - path: /
-                pathType: Prefix
+                service:
+                  name: main
+                  port: http
         tls:
           - hosts:
               - *host
-#           secretName: "ombi-tls"
-    podSecurityContext:
-      fsGroup: 1000
-      fsGroupChangePolicy: "OnRootMismatch"
+
     persistence:
       config:
         enabled: true
         existingClaim: ombi-config-v1
         mountPath: /config
-    env:
-      PUID: "1000"
-      PGID: "1000"
-    resources:
-      requests:
-        cpu: 15m
-        memory: 226M
-      limits:
-        memory: 292M

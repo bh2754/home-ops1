@@ -11,13 +11,11 @@ resources:
 # - ./immich/ks.yaml
   - ./jellyfin/ks.yaml
   - ./komga/ks.yaml
-# - ./linux/ks.yaml
-  - ./ombi/ks.yaml
+# - ./ombi/ks.yaml
   - ./overseerr/ks.yaml
   - ./stash/ks.yaml
   - ./tautulli/ks.yaml
   - ./tdarr/ks.yaml
-# - ./tubearchivist/ks.yaml
 # - ./varken/ks.yaml
 # - ./webtop/ks.yaml
 # - ./wizarr/ks.yaml
