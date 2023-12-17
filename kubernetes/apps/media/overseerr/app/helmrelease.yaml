@@ -35,10 +35,6 @@ spec:
   values:
     controllers:
       main:
-        type: deployment
-        annotations:
-          reloader.stakater.com/auto: "true"
-
         pod:
           annotations:
             setGateway: "true"
@@ -61,11 +57,13 @@ spec:
                 memory: 226M
               limits:
                 memory: 1937M
+
     service:
       main:
         ports:
           http:
             port: *port
+
     ingress:
       main:
         enabled: true
