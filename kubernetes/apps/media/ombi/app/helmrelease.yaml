@@ -52,7 +52,7 @@ spec:
       main:
         enabled: true
         primary: true
-        className: nginx
+        className: internal
         hosts:
           - host: &host ombi.${SECRET_DOMAIN}
             paths:
