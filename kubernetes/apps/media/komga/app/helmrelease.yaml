@@ -38,8 +38,6 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
-          annotations:
-            setGateway: "false"
           securityContext:
             runAsUser: 568
             runAsGroup: 568   # was 568 before app template upgrade
@@ -51,6 +49,7 @@ spec:
               repository: ghcr.io/onedr0p/sonarr-develop
               tag: 4.0.0.733@sha256:7f1496845bc0bf1d46b37b1013bb2a4b7af79e13b2a12dbc882d456bc869ca39
             env:
+              TZ: America/Chicago
               KOMGA_CONFIGDIR: "/config"
               SERVER_PORT: &port 8443
     service:
@@ -89,4 +88,4 @@ spec:
         type: nfs
         server: "${NFS_SERVER}"
         path: /volume1/Media/comics
-#       mountPath: /media
+        mountPath: /media
