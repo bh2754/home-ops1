@@ -9,60 +9,81 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.3.0
       interval: 30m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
+  install:
+    createNamespace: true
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  dependsOn:
+    - name: onepassword-connect
+      namespace: external-secrets
+    - name: nginx-external
+      namespace: networking
+    - name: authelia
+      namespace: security
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
 
   values:
-    image:
-      repository: ghcr.io/sct/overseerr
-      tag: 1.33.2
+    main:
+      type: deployment
+      annotations:
+        reloader.stakater.com/auto: "true"
 
-    env:
-      LOG_LEVEL: "info"
-      PORT: 80
-
-    service:
-      main:
-        ports:
-          http:
-            port: 80
-
-    ingress:
-      main:
-        enabled: true
-        ingressClassName: "internal"
+      pod:
         annotations:
-          hajimari.io/enable: "true"
-          hajimari.io/icon: mdi:eye-circle
-#         cert-manager.io/cluster-issuer: "letsencrypt-production"
-        hosts:
-          - host: &host "overseerr.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-        tls:
-          - hosts:
-              - *host
-#          secretName: "overseerr-tls"
-
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: OnRootMismatch
-
-    persistence:
-      config:
-        enabled: true
-        existingClaim: overseerr-config-v1
-        mountPath: /app/config
-
-    resources:
-      requests:
-        cpu: 15m
-        memory: 226M
-      limits:
-        memory: 1937M
+          setGateway: "true"
+        securityContext:
+          runAsUser: 568
+          runAsGroup: 568
+          fsGroup: 568
+          fsGroupChangePolicy: "OnRootMismatch"
+      containers:
+        main:
+          image:
+            repository: ghcr.io/sct/overseerr
+            tag: 1.33.2
+          env:
+            LOG_LEVEL: "info"
+            PORT: &port 80
+          resources:
+            requests:
+              cpu: 15m
+              memory: 226M
+            limits:
+              memory: 1937M
+  service:
+    main:
+      ports:
+        http:
+          port: *port
+  ingress:
+    main:
+      enabled: true
+      className: "internal"
+      annotations:
+        hajimari.io/enable: "true"
+        hajimari.io/icon: mdi:eye-circle
+      hosts:
+        - host: &host "overseerr.${SECRET_DOMAIN}"
+          paths:
+            - path: /
+              service:
+                name: main
+                port: http
+      tls:
+        - hosts:
+            - *host
+  persistence:
+    config:
+      enabled: true
+      existingClaim: overseerr-config-v1
+      mountPath: /app/config
