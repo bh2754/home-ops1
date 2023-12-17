@@ -33,31 +33,34 @@ spec:
       namespace: rook-ceph
 
   values:
-    main:
-      type: deployment
-      annotations:
-        reloader.stakater.com/auto: "true"
+    controllers:
+      main:
+        type: deployment
+        annotations:
+          reloader.stakater.com/auto: "true"
 
-      pod:
-        securityContext:
-          runAsUser: 568
-          runAsGroup: 568
-          fsGroup: 568
-          fsGroupChangePolicy: "OnRootMismatch"
-      containers:
-        main:
-          image:
-            repository: ghcr.io/sct/overseerr
-            tag: 1.33.2
-          env:
-            LOG_LEVEL: "info"
-            PORT: &port 80
-          resources:
-            requests:
-              cpu: 15m
-              memory: 226M
-            limits:
-              memory: 1937M
+        pod:
+          annotations:
+            setGateway: "true"
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/sct/overseerr
+              tag: 1.33.2
+            env:
+              LOG_LEVEL: "info"
+              PORT: &port 80
+            resources:
+              requests:
+                cpu: 15m
+                memory: 226M
+              limits:
+                memory: 1937M
     service:
       main:
         ports:
