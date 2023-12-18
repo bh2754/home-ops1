@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 1.5.1
+      version: 2.3.0
       sourceRef:
         kind: HelmRepository
         name: bjw-s
@@ -21,13 +21,44 @@ spec:
   upgrade:
     remediation:
       retries: 5
+  dependsOn:
+    - name: onepassword-connect
+      namespace: external-secrets
+    - name: nginx-external
+      namespace: networking
+    - name: authelia
+      namespace: security
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   values:
-    image:
-      repository: ghcr.io/bh2754/tautulli
-      tag: 2.13.4@sha256:3ebf507848d1538d19e23e935939f86060ce4513fe1d232a0ff5b93c88e2e5af
-      pullPolicy: IfNotPresent
-    env:
-      TZ: "${TZ}"
+    controllers:
+      main:
+        type: deployment
+        annotations:
+          reloader.stakater.com/auto: "true"
+
+        pod:
+          securityContext:
+            runAsUser: 568
+            runAsGroup: 568
+            fsGroup: 568
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          main:
+            image:
+              repository: ghcr.io/bh2754/tautulli
+              tag: 2.13.4@sha256:3ebf507848d1538d19e23e935939f86060ce4513fe1d232a0ff5b93c88e2e5af
+              pullPolicy: IfNotPresent
+            env:
+              TZ: "${TZ}"
+            resources:
+              requests:
+                cpu: 15m
+                memory: 105M
+                ephemeral-storage: "2Gi"
+              limits:
+                memory: 122M
+                ephemeral-storage: "4Gi"
     service:
       main:
         ports:
@@ -38,13 +69,8 @@ spec:
         enabled: true
         ingressClassName: "internal"
         annotations:
-#         cert-manager.io/cluster-issuer: "letsencrypt-production"
           hajimari.io/enable: "true"
           hajimari.io/icon: "chart-box"
-#         nginx.ingress.kubernetes.io/configuration-snippet: |-
-#           proxy_set_header Accept-Encoding "";
-#           sub_filter '</head>' '<link rel="stylesheet" type="text/css" href="https://theme-park.${SECRET_DOMAIN}/css/base/tautulli/space.css"></head>';
-#           sub_filter_once on;
         hosts:
           - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
             paths:
@@ -53,23 +79,7 @@ spec:
         tls:
           - hosts:
               - *host
-#           secretName: "tautulli-tls"
-    podSecurityContext:
-      runAsUser: 568
-      runAsGroup: 568
-      fsGroup: 568
-      fsGroupChangePolicy: "OnRootMismatch"
     persistence:
       config:
         enabled: true
         existingClaim: tautulli-config-v1
-    resources:
-      requests:
-        cpu: 15m
-        memory: 105M
-        ephemeral-storage: "2Gi"
-      limits:
-        memory: 122M
-        ephemeral-storage: "4Gi"
-    podAnnotations:
-      backup.velero.io/backup-volumes: config
