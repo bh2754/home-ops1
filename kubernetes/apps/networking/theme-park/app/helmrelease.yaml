@@ -23,19 +23,20 @@ spec:
       retries: 5
   values:
     controllers:
-      replicas: 3
-      strategy: RollingUpdate
-      containers:
-        main:
-          image:
-            repository: ghcr.io/bh2754/theme-park
-            tag: 1.14.1@sha256:8a17246a2548143ce02cb6b4ad07d79b5d55a69b6e5e041a78ee219051f6acb4
-          resources:
-            requests:
-              cpu: 5m
-              memory: 10Mi
-            limits:
-      #       memory: 50Mi
+      main:
+        replicas: 3
+        strategy: RollingUpdate
+        containers:
+          main:
+            image:
+              repository: ghcr.io/bh2754/theme-park
+              tag: 1.14.1@sha256:8a17246a2548143ce02cb6b4ad07d79b5d55a69b6e5e041a78ee219051f6acb4
+            resources:
+              requests:
+                cpu: 5m
+                memory: 10Mi
+              limits:
+        #       memory: 50Mi
     service:
       main:
         ports:
