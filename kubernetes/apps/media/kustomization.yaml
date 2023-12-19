@@ -19,4 +19,4 @@ resources:
 # - ./varken/ks.yaml
 # - ./webtop/ks.yaml
 # - ./wizarr/ks.yaml
-  - ./ubuntu/ks.yaml
+# - ./ubuntu/ks.yaml

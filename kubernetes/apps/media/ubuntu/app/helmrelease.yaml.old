@@ -9,47 +9,17 @@ spec:
   chart:
     spec:
       chart: app-template
-      version: 2.3.0
+      version: 1.5.1
       interval: 15m
       sourceRef:
         kind: HelmRepository
         name: bjw-s
         namespace: flux-system
   # See https://github.com/bjw-s/helm-charts/blob/main/charts/library/common/values.yaml
-  install:
-    createNamespace: true
-    remediation:
-      retries: 5
-  upgrade:
-    remediation:
-      retries: 5
-  dependsOn:
-    - name: nginx-external
-      namespace: networking
-    - name: authelia
-      namespace: security
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
   values:
-    controllers:
-      main:
-        type: deployment
-        annotations:
-          reloader.stakater.com/auto: "true"
-
-        pod:
-          annotations:
-            setGateway: "true"
-          securityContext:
-            runAsUser: 0
-            runAsGroup: 0
-            fsGroup: 0
-            fsGroupChangePolicy: "OnRootMismatch"
-        containers:
-          main:
-            image:
-              repository: docker.io/dorowu/ubuntu-desktop-lxde-vnc
-              tag: latest@sha256:775184eaa5bbc01bc4261a6c9596a642b3b43a433c1508637567bc724575964b
+    image:
+      repository: docker.io/dorowu/ubuntu-desktop-lxde-vnc
+      tag: latest@sha256:775184eaa5bbc01bc4261a6c9596a642b3b43a433c1508637567bc724575964b
 
     service:
       main:
@@ -63,7 +33,7 @@ spec:
     ingress:
       main:
         enabled: true
-        className: external
+        ingressClassName: external
         annotations:
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           nginx.ingress.kubernetes.io/auth-method: GET
@@ -77,9 +47,13 @@ spec:
           - host: &host "ubuntu.${SECRET_DOMAIN}"
             paths:
               - path: /
-                service:
-                  name: main
-                  port: http
+                pathType: Prefix
         tls:
           - hosts:
               - *host
+#          secretName: "ubuntu-tls"
+
+    podSecurityContext:
+      runAsUser: 0
+      runAsGroup: 0
+      fsGroup: 0
