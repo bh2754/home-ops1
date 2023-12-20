@@ -11,20 +11,22 @@ authentication_backend:
     start_tls: false
     base_dn: dc=bharris,dc=co
     additional_users_dn: ou=Users
-    users_filter: (&(|({username_attribute}={input})({mail_attribute}={input}))(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=2)(!pwdLastSet=0))
+    users_filter: "(&(|({username_attribute}={input})({mail_attribute}={input}))(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=2)(!pwdLastSet=0))"
     additional_groups_dn: ou=groups
-    groups_filter: (&(member:1.2.840.113556.1.4.1941:={dn})(objectClass=group)(objectCategory=group))
+    groups_filter: "(&(member:1.2.840.113556.1.4.1941:={dn})(objectClass=group)(objectCategory=group))"
     group_search_mode: filter
     user: CN=Administrator,CN=Users,DC=bharris,DC=co
     password: password
     attributes:
       username: sAMAccountName
-      display_name: displayName
+      display_name: givenName
       mail: mail
       member_of: memberOf
       group_name: cn
+
 session:
   redis:
+    host: redis.databases.svc.cluster.local
     high_availability:
       sentinel_name: redis-master
       nodes:
