@@ -1,32 +1,6 @@
 ---
----
-authentication_backend:
-  password_reset:
-    disable: true
-  refresh_interval: 1m
-  ldap:
-    address: ldap://10.0.103.10:389
-    implementation: activedirectory
-    timeout: 5s
-    start_tls: false
-    base_dn: dc=bharris,dc=co
-    additional_users_dn: ou=Users
-    users_filter: "(&(|({username_attribute}={input})({mail_attribute}={input}))(objectCategory=person)(objectClass=user)(!userAccountControl:1.2.840.113556.1.4.803:=2)(!pwdLastSet=0))"
-    additional_groups_dn: ou=groups
-    groups_filter: "(&(member:1.2.840.113556.1.4.1941:={dn})(objectClass=group)(objectCategory=group))"
-    group_search_mode: filter
-    user: CN=Administrator,CN=Users,DC=bharris,DC=co
-    password: password
-    attributes:
-      username: sAMAccountName
-      display_name: givenName
-      mail: mail
-      member_of: memberOf
-      group_name: cn
-
 session:
   redis:
-    host: redis.databases.svc.cluster.local
     high_availability:
       sentinel_name: redis-master
       nodes:
@@ -36,33 +10,6 @@ session:
           port: 26379
         - host: redis-node-2.redis-headless.databases.svc.cluster.local
           port: 26379
-  same_site: lax
-  inactivity: 5m
-  expiration: 1h
-  remember_me: 1M
-  cookies:
-    - name: bharris_session
-      domain: bharris.co
-      authelia_url: https://auth.bharris.co
-      default_redirection_url: https://bharris.co
-
-notifier:
-  disable_startup_check: true
-  smtp:
-    address: smtp.gmai.com:587
-    sender: Authelia <bh2754@gmail.com  >
-    disable_require_tls: true
-
-totp:
-  disable: false
-  issuer: authelia.com
-
-webauthn:
-  disable: true
-
-duo_api:
-  disable: true
-
 access_control:
   default_policy: two_factor
   networks:
@@ -102,3 +49,33 @@ identity_providers:
         redirect_uris:
           - "https://grafana.${SECRET_DOMAIN}/login/generic_oauth"
         userinfo_signing_algorithm: none
+    # - id: outline
+      # description: Outline
+      # secret: "${SECRET_OUTLINE_OAUTH_CLIENT_SECRET}"
+      # public: false
+      # authorization_policy: two_factor
+      # pre_configured_consent_duration: 1y
+      # scopes: ["openid", "profile", "email", "offline_access"]
+      # redirect_uris: ["https://docs.${SECRET_DOMAIN}/auth/oidc.callback"]
+      # userinfo_signing_algorithm: none
+    # - id: gitea
+      # secret: "${SECRET_GITEA_OAUTH_CLIENT_SECRET}"
+      # public: false
+      # authorization_policy: two_factor
+      # scopes: ["openid", "profile", "groups", "email"]
+      # redirect_uris: ["https://gitea.${SECRET_DOMAIN}/user/oauth2/authelia/callback"]
+      # userinfo_signing_algorithm: none
+    # - id: miniflux
+      # description: Miniflux
+      # secret: "${SECRET_MINIFLUX_OAUTH_CLIENT_SECRET}"
+      # public: false
+      # authorization_policy: two_factor
+      # pre_configured_consent_duration: 1y
+      # scopes:
+        # - openid
+        # - profile
+        # - groups
+        # - email
+      # redirect_uris:
+        # - "https://miniflux.${INGRESS_DOMAIN}/oauth2/oidc/callback"
+      # userinfo_signing_algorithm: none
