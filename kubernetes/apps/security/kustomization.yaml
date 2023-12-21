@@ -7,5 +7,5 @@ resources:
   - ./namespace.yaml
   # Flux-Kustomizations
 # - ./authelia/ks.yaml
-# - ./authelia-new/ks.yaml
+  - ./authelia-new/ks.yaml
 # - ./redis-haproxy/ks.yaml
