@@ -1,0 +1,107 @@
+---
+theme: auto
+default_redirection_url: https://auth.${SECRET_DOMAIN_0}
+server:
+  host: 0.0.0.0
+  port: 9091
+  buffers:
+    read: 4096
+    write: 4096
+  path: ""
+log:
+  level: debug
+totp:
+  disable: false
+webauthn:
+  disable: true
+ntp:
+  address: time.cloudflare.com:123
+  version: 4
+  max_desync: 3s
+  disable_startup_check: false
+  disable_failure: false
+  ldap:
+    implementation: activedirectory
+    url: ldap://10.0.103.10:389
+    timeout: 5s
+    start_tls: false
+    base_dn: dc=bharris,dc=co
+    username_attribute: sAMAccountName
+    additional_users_dn: ou=Users
+    users_filter: "(&(|({username_attribute}={input})({mail_attribute}={input}))(sAMAccountType=805306368)(!(userAccountControl:1.2.840.113556.1.4.803:=2))(!(pwdLastSet=0)))"
+    additional_groups_dn: ou=groups
+    groups_filter: "(&(member={dn})(|(sAMAccountType=268435456)(sAMAccountType=536870912)))"
+    group_name_attribute: cn
+    mail_attribute: mail
+    display_name_attribute: displayName
+    user: CN=administrator,CN=Users,DC=bharris,DC=co
+access_control:
+  default_policy: deny
+  networks:
+    - name: internal
+      networks:
+        - 10.0.0.0/8
+        - 192.168.50.0/24
+        - 192.168.150.0/24
+  rules:
+    - domain: "*.${SECRET_DOMAIN}"
+      policy: bypass
+      networks:
+        - internal
+    - domain: "*.${SECRET_DOMAIN}"
+      policy: two_factor
+session:
+  name: authelia_session
+  expiration: 1h
+  inactivity: 15m
+  remember_me_duration: 1M
+  domain: ${SECRET_DOMAIN}
+  redis:
+    host: redis.databases.svc.cluster.local
+    port: 6379
+    high_availability:
+      sentinel_name: redis-master
+      nodes:
+        - host: redis-node-0.redis-headless.databases.svc.cluster.local
+          port: 26379
+        - host: redis-node-1.redis-headless.databases.svc.cluster.local
+          port: 26379
+        - host: redis-node-2.redis-headless.databases.svc.cluster.local
+          port: 26379
+regulation:
+  max_retries: 3
+  find_time: 2m
+  ban_time: 5m
+notifier:
+  disable_startup_check: false
+  smtp:
+    host: smtp.gmail.com
+    port: 587
+    username: bh2754@gmail.com
+    sender: Authelia Admin <admin@bharris.co>
+  disable: true
+
+identity_providers:
+  oidc:
+    cors:
+      endpoints:
+        - authorization
+        - token
+        - revocation
+        - introspection
+      allowed_origins_from_client_redirect_uris: true
+    clients:
+      - id: grafana
+        description: Grafana
+        secret: "${SECRET_GRAFANA_OAUTH_CLIENT_SECRET}"
+        public: false
+        authorization_policy: two_factor
+        pre_configured_consent_duration: 1y
+        scopes:
+          - openid
+          - profile
+          - groups
+          - email
+        redirect_uris:
+          - "https://grafana.${SECRET_DOMAIN}/login/generic_oauth"
+        userinfo_signing_algorithm: none
