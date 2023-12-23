@@ -9,8 +9,6 @@ metadata:
 spec:
   dependsOn:
     - name: cluster-apps-cloudnative-pg-app
-    - name: cluster-apps-redis
-    - name: cluster-apps-onepassword-connect
   path: ./kubernetes/apps/security/authelia/app
   prune: true
   sourceRef:
