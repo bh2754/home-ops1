@@ -126,6 +126,7 @@ spec:
           - hosts:
               - *host
             secretName: authelia-tls
+    persistence:
       config:
         enabled: true
         type: configMap
