@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: authelia
@@ -8,7 +8,7 @@ spec:
   values:
     initContainers:
       init-db:
-        image: ghcr.io/bh2754/postgres-initdb:14.10
+        image: ghcr.io/bh2754/postgres-initdb:14.9
         env:
           - name: POSTGRES_HOST
             value: postgres-rw.databases.svc.cluster.local

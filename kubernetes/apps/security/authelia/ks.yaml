@@ -7,8 +7,6 @@ metadata:
   labels:
     substitution.flux.home.arpa/enabled: "true"
 spec:
-  dependsOn:
-    - name: cluster-apps-cloudnative-pg-app
   path: ./kubernetes/apps/security/authelia/app
   prune: true
   sourceRef:
