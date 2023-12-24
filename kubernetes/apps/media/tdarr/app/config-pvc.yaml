@@ -4,8 +4,6 @@ kind: PersistentVolumeClaim
 metadata:
   name: tdarr-config-v1
   namespace: media
-# labels:
-  # snapshot.home.arpa/enabled: "true"
 spec:
   accessModes:
     - ReadWriteOnce
@@ -13,15 +11,12 @@ spec:
     requests:
       storage: 10Gi
   storageClassName: ceph-block
-# storageClassName: synology-iscsi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: tdarr-serverdata-v1
   namespace: media
-# labels:
-  # snapshot.home.arpa/enabled: "true"
 spec:
   accessModes:
     - ReadWriteOnce
@@ -29,4 +24,3 @@ spec:
     requests:
       storage: 10Gi
   storageClassName: ceph-block
-# storageClassName: synology-iscsi
