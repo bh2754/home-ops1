@@ -1,5 +1,5 @@
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
   name: authelia
@@ -37,7 +37,7 @@ spec:
           01-init-db:
             image:
               repository: ghcr.io/onedr0p/postgres-init   #ghcr.io/bh2754/postgres-initdb
-              tag: 15
+              tag: 16
             envFrom:
               - secretRef:
                   name: authelia-secret
