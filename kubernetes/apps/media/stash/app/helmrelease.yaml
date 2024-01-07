@@ -43,7 +43,6 @@ spec:
               STASH_GENERATED: /generated/
               STASH_METADATA: /metadata/
               STASH_CACHE: /cache/
-              STASH_EXTERNAL_HOST: "https://stash.${SECRET_DOMAIN}"
             probes:
               liveness:
                 spec:
@@ -58,9 +57,7 @@ spec:
       main:
         ports:
           http:
-            enabled: true
             port: 9999
-            protocol: TCP
     ingress:
       main:
         enabled: true
