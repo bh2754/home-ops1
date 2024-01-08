@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ./config-pvc.yaml
   - ./helmrelease.yaml
-  - ./worker.yaml
+# - ./worker.yaml
   - ./gatus.yaml
 # - ./volsync.yaml
 commonLabels:
