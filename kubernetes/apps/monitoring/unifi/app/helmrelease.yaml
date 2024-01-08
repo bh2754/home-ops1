@@ -40,10 +40,10 @@ spec:
               - secretRef:
                   name: unifi-poller
             env:
-              TZ: America/Vancouver
-              UP_UNIFI_DEFAULT_ROLE: home-ops
+              TZ: ${TZ}
+              UP_UNIFI_DEFAULT_ROLE: home-kubernetes
               UP_UNIFI_DEFAULT_URL: https://192.168.22.1
-              UP_UNIFI_DEFAULT_VERIFY_SSL: true
+              UP_UNIFI_DEFAULT_VERIFY_SSL: false
               UP_UNIFI_DEFAULT_SAVE_SITES: true
               UP_UNIFI_DEFAULT_SAVE_DPI: false
               UP_INFLUXDB_DISABLE: false
