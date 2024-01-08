@@ -5,11 +5,6 @@ metadata:
   name: tdarr
   namespace: media
 spec:
-  dependsOn:
-    - name: traefik
-      namespace: networking
-    - name: node-feature-discovery
-      namespace: kube-system
   maxHistory: 3
   interval: 5m
   suspend: false
