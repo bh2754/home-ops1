@@ -53,7 +53,7 @@ spec:
     persistence:
       server:
         enabled: true
-        existingClaim: tdarr-data-v1
+        existingClaim: tdarr-serverdata-v1
         globalMounts:
           - path: /app/server
       config:
