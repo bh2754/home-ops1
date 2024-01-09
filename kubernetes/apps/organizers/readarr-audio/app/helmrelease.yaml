@@ -112,7 +112,7 @@ spec:
       config:
         enabled: true
         existingClaim: readarr-audio-config-v1
-      books:
+      audiobooks:
         enabled: true
         type: nfs
         server: &nas "${NFS_SERVER}"
