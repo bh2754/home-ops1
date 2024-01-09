@@ -116,7 +116,7 @@ spec:
         enabled: true
         type: nfs
         server: &nas "${NFS_SERVER}"
-        path: ${NFS_MEDIA}/audiobooks
+        path: /volume1/Media/audiobooks
         mountPath: /audiobooks
       downloads:
         enabled: true

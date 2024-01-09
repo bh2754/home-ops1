@@ -1,10 +1,9 @@
----
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cluster-settings-user
-  namespace: flux-system
+    name: cluster-settings-user
+    namespace: flux-system
 data:
-  METALLB_TDARR: "10.0.111.25"
-  VECTOR_IP: "10.0.111.26"
-  PROMTAIL_ADDR: "10.0.111.31"
+    METALLB_TDARR: 10.0.111.25
+    VECTOR_IP: 10.0.111.26
+    PROMTAIL_ADDR: 10.0.111.31
