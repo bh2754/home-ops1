@@ -15,6 +15,7 @@ spec:
         name: bitnami
         namespace: flux-system
   install:
+    createNamespace: true
     remediation:
       retries: 3
   upgrade:
@@ -24,6 +25,8 @@ spec:
   uninstall:
     keepHistory: false
   values:
+    global:
+      storageClass: ceph-block
     auth:
       enabled: false
       sentinel: false
@@ -38,11 +41,10 @@ spec:
       masterSet: redis-master
       getMasterTimeout: 10
       startupProbe:
-        failureThreshold: 2
+        failureThreshold: 3
       persistence:
         enabled: false
     metrics:
       enabled: true
       serviceMonitor:
         enabled: true
-        interval: 1m
