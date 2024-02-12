@@ -42,8 +42,8 @@ spec:
             setGateway: "true"
           securityContext:
             runAsUser: 568
-            runAsGroup: 100   # was 568 before app template upgrade
-            fsGroup: 100
+            runAsGroup: 568 #100   # was 568 before app template upgrade
+            fsGroup: 568 #100
             fsGroupChangePolicy: "OnRootMismatch"
         containers:
           main:
