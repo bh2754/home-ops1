@@ -69,7 +69,7 @@ spec:
           netshoot:
             image:
               repository: ghcr.io/nicolaka/netshoot
-              tag: v0.11
+              tag: v0.12
             command: ["/bin/bash"]
             args: ["-c", "while true; do ping localhost; sleep 60;done"]
 
