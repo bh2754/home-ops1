@@ -69,7 +69,7 @@ spec:
     elasticsearch:
       image:
         repository: bitnami/elasticsearch
-        tag: 8.12.1
+        tag: 8.12.2
       global:
         storageClass: ""
       extraEnvVars:
