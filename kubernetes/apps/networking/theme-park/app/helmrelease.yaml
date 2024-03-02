@@ -30,7 +30,7 @@ spec:
           main:
             image:
               repository: ghcr.io/bh2754/theme-park
-              tag: 1.15.1@sha256:8929e9629542c1dbe51cc94eb31c782fdd3ea88855b946580416c6bdfce04888
+              tag: 1.16.0@sha256:02dd1a093c88ec310b46b0817d12173a19ff6fd1b141878fa33d7d66ff5df8f5
             resources:
               requests:
                 cpu: 5m
