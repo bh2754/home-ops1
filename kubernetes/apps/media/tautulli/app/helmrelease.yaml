@@ -47,7 +47,7 @@ spec:
           main:
             image:
               repository: ghcr.io/bh2754/tautulli
-              tag: 2.13.4@sha256:3ebf507848d1538d19e23e935939f86060ce4513fe1d232a0ff5b93c88e2e5af
+              tag: 2.13.4@sha256:ce6dfc67e3cb79f6541b6ca1cc0e37d643fc9b9e2db5dfbf47872c5b1587bdca
               pullPolicy: IfNotPresent
             env:
               TZ: "${TZ}"
