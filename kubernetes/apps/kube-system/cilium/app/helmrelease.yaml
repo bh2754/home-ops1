@@ -114,4 +114,4 @@ spec:
     rollOutCiliumPods: true
     securityContext:
       privileged: true
-    tunnel: native
+    tunnel: disabled
