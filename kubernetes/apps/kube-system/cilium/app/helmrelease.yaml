@@ -116,4 +116,4 @@ spec:
     securityContext:
       privileged: true
 #   tunnel: disabled
-    tunnel: native
+    routingMode: native
