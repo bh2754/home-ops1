@@ -37,7 +37,7 @@ spec:
     configmapTest:
       image:
         repository: koalaman/shellcheck
-        tag: v0.9.0
+        tag: v0.10.0
         pullPolicy: IfNotPresent
       resources: {}
     serviceAccount:
